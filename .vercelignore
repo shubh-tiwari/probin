@@ -1,0 +1,7 @@
+# The Vercel deploy only needs the site's source, its build script, the name
+# constant and the screenshots. Keep local secrets out of uploads in any case.
+.env
+.env.*
+.dev-secrets
+.railway
+node_modules

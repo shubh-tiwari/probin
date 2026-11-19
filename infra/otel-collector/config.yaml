@@ -16,7 +16,8 @@ receivers:
   otlp:
     protocols:
       http:
-        endpoint: 0.0.0.0:4318
+        # Railway's private network needs [::]:4318; see infra/railway.
+        endpoint: ${env:OTLP_HTTP_ENDPOINT:-0.0.0.0:4318}
         # Makes request headers available to processors as `metadata.<header>`.
         include_metadata: true
 

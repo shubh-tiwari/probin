@@ -7,3 +7,6 @@ dist/
 !.env.example
 coverage/
 .DS_Store
+
+# Railway variables and generated secrets (scripts/railway-env.mjs)
+.railway/

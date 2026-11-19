@@ -4,7 +4,7 @@
 .git
 .env
 .dev-secrets
+.railway
 .env.*
 !.env.example
-infra/demo
 coverage

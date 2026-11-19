@@ -262,9 +262,15 @@ scripts/       acceptance checks and repository checks
 [vercel.com/new](https://vercel.com/new) and keep the defaults. `vercel.json` does the rest. Build
 it locally with `pnpm site:build`.
 
-**The product itself** is a set of long-running services (a metrics store, a collector, workers and
-an alert engine), so it runs with Docker Compose on any server. Connecting real Slack, GitHub and
-Stripe apps needs a public HTTPS address.
+**The product itself** runs on [Railway](https://railway.com), in either of two setups:
+
+- **Demo:** the whole product with stand-in Slack, GitHub and Stripe, demo services and live
+  traffic. Anyone with the link can try it. `pnpm railway:env demo` writes every service's
+  settings.
+- **Real:** your own Slack app, GitHub App and Stripe account. `pnpm railway:env real`.
+
+The [Railway runbook](docs/runbooks/railway.md) walks through both. Anywhere else, it runs with
+Docker Compose on a server with a public HTTPS address.
 
 ## Docs
 
@@ -284,6 +290,7 @@ Stripe apps needs a public HTTPS address.
 - [Web tool](docs/runbooks/phase-3.md): dashboards, sharing, the read API
 - [Alerts and billing](docs/runbooks/phase-4.md): alert rules, data sources, Stripe
 - [Review](docs/runbooks/phase-5.md): GitHub App, reports, pull request comments
+- [Railway](docs/runbooks/railway.md): deploying the demo or the real setup
 
 </details>
 

@@ -49,7 +49,7 @@ To try the install flow, open <http://localhost:8092/slack/install> in a browser
 ## Connecting a real Slack workspace
 
 1. Make the Slack service reachable from the internet over HTTPS (a tunnel works for testing).
-2. Run `pnpm slack:manifest https://<that address>` and create the app at
+2. Run `pnpm slack:manifest https://<that address> https://<web tool address>` and create the app at
    <https://api.slack.com/apps> → **Create New App** → **From a manifest**.
 3. From the app's **Basic Information** page, put the signing secret, client id and client
    secret in the environment as `SLACK_SIGNING_SECRET`, `SLACK_CLIENT_ID` and
