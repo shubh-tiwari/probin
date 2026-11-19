@@ -18,7 +18,8 @@ and hands back a chart that shows its working. Then it reviews your code with th
 ![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-native-2463eb)
 ![Runs locally](https://img.shields.io/badge/runs%20locally-no%20keys%20needed-d4900c)
 
-[Quick start](#quick-start) · [How it works](#how-it-works) · [Features](#features) · [Review](#review-a-code-reviewer-that-has-read-your-metrics) ·
+[Two products](#two-products-one-platform) · [Watch](#watch-charts-and-alerts-from-a-sentence) ·
+[Review](#review-a-code-reviewer-that-has-read-your-metrics) · [Quick start](#quick-start) ·
 [Architecture](#architecture) · [Deploy](#deploy)
 
 <br />
@@ -29,7 +30,18 @@ and hands back a chart that shows its working. Then it reviews your code with th
 
 ---
 
-## Why
+## Two products, one platform
+
+|              | **Watch**                                                  | **Review**                                                                          |
+| ------------ | ---------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **For**      | Anyone who wants to know what production is doing          | Engineers shipping changes                                                          |
+| **You ask**  | "p95 latency of checkout in the last hour"                 | Nothing. It runs on every pull request and deploy                                   |
+| **You get**  | A tested chart, a dashboard, an alert waiting for approval | Comments on the lines that matter, a weekly bottleneck report, a note after deploys |
+| **Lives in** | Slack and the web tool                                     | GitHub and the Review page                                                          |
+
+Both read the same metrics, which the Claude Code skill sets up once. Start with either one.
+
+## Watch: charts and alerts from a sentence
 
 Dashboards are slow to build, and asking a model for a query gives you something that _looks_ right:
 a metric name it guessed, a label that doesn't exist, a chart of nothing. Probin closes that gap.
@@ -47,7 +59,7 @@ bot    P95 latency was 690 ms most recently, between 541 ms and 1410 ms over the
 At most two questions. Every other choice is stated as an assumption you can change. The query is
 shown, and it has already been run against your data.
 
-## How it works
+### How it works
 
 1. **Instrument with Claude Code.** A skill adds OpenTelemetry metrics that follow one convention,
    and writes a manifest of every endpoint and metric.
@@ -56,7 +68,7 @@ shown, and it has already been run against your data.
 3. **Keep it, watch it.** Save it to a dashboard, or turn it into an alert that waits for a person
    to approve it.
 
-## Features
+### What you get
 
 <table>
 <tr>
@@ -81,17 +93,6 @@ charts.
 
 </td>
 <td width="50%"><img src="docs/screenshots/web-alerts.png" alt="Alert rules pending approval" /></td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-### 🔍 A reviewer that has read your metrics
-
-Review reads your code alongside live traffic. It ranks the slowest endpoints, points at the
-handler line, suggests a fix, comments on pull requests and follows up after deploys.
-
-</td>
-<td width="50%"><img src="docs/screenshots/review-bottlenecks.png" alt="Bottleneck report" /></td>
 </tr>
 </table>
 

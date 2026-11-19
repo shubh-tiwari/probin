@@ -53,5 +53,6 @@ for (const page of readdirSync(at('site/src')).filter((file) => file.endsWith('.
   writeFileSync(`${out}/${page}`, fill(page));
 }
 cpSync(at('site/src/favicon.svg'), `${out}/favicon.svg`);
+cpSync(at('site/src/styles.css'), `${out}/styles.css`);
 cpSync(at('docs/screenshots'), `${out}/shots`, { recursive: true });
 console.log(`Built the site for ${name} into site/dist (repository: ${repo.url}).`);
