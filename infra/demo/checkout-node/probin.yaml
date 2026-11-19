@@ -1,0 +1,26 @@
+service: checkout
+description: Handles cart summary, payment and order lookup
+endpoints:
+  - method: POST
+    route: /checkout/pay
+    description: Charges the customer and creates the order
+  - method: GET
+    route: /checkout/summary
+    description: Returns the order summary before payment
+  - method: GET
+    route: /checkout/orders/:id
+    description: Returns one order
+metrics:
+  - name: http.server.request.duration
+    type: histogram
+    unit: s
+    description: Duration of requests this service handles
+  - name: http.client.request.duration
+    type: histogram
+    unit: s
+    description: Duration of HTTP calls this service makes to others
+  - name: orders.completed
+    type: counter
+    unit: "{order}"
+    description: Orders paid successfully
+    attributes: [payment.method]

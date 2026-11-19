@@ -1,0 +1,10 @@
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+.git
+.env
+.dev-secrets
+.env.*
+!.env.example
+infra/demo
+coverage

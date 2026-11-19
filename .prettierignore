@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+**/dist/
+packages/db/migrations/
+docs/build-plan.md
+packages/specs/src/fixtures/
+# Demo services stand in for customers' code and are written by the skill.
+infra/demo/
+skill/dist/

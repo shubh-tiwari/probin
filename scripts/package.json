@@ -1,0 +1,27 @@
+{
+  "name": "@app/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@app/agent": "workspace:*",
+    "@app/catalog": "workspace:*",
+    "@app/charts": "workspace:*",
+    "@app/config": "workspace:*",
+    "@app/connector": "workspace:*",
+    "@app/db": "workspace:*",
+    "@app/ingest": "workspace:*",
+    "@app/memory": "workspace:*",
+    "@app/query-api": "workspace:*",
+    "@app/slack": "workspace:*",
+    "@app/specs": "workspace:*",
+    "@app/web": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "drizzle-orm": "^0.45.4",
+    "pg": "^8.23.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
+  }
+}

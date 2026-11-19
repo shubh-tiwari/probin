@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/db"
+    },
+    {
+      "path": "../../packages/charts"
+    },
+    {
+      "path": "../../packages/specs"
+    },
+    {
+      "path": "../../packages/memory"
+    },
+    {
+      "path": "../agent"
+    },
+    {
+      "path": "../query-api"
+    },
+    {
+      "path": "../slack"
+    },
+    {
+      "path": "../ingest"
+    },
+    {
+      "path": "../../packages/catalog"
+    },
+    {
+      "path": "../review"
+    }
+  ]
+}

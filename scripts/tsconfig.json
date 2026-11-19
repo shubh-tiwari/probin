@@ -1,0 +1,43 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["*.ts", "lib/*.ts"],
+  "references": [
+    {
+      "path": "../packages/config"
+    },
+    {
+      "path": "../packages/db"
+    },
+    {
+      "path": "../apps/ingest"
+    },
+    {
+      "path": "../apps/query-api"
+    },
+    {
+      "path": "../packages/catalog"
+    },
+    {
+      "path": "../packages/specs"
+    },
+    {
+      "path": "../apps/agent"
+    },
+    {
+      "path": "../apps/slack"
+    },
+    {
+      "path": "../apps/web"
+    },
+    {
+      "path": "../packages/charts"
+    },
+    {
+      "path": "../apps/connector"
+    }
+  ]
+}

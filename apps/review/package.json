@@ -1,0 +1,26 @@
+{
+  "name": "@app/review",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@app/agent": "workspace:*",
+    "@app/catalog": "workspace:*",
+    "@app/charts": "workspace:*",
+    "@app/config": "workspace:*",
+    "@app/db": "workspace:*",
+    "@app/memory": "workspace:*",
+    "@app/query-api": "workspace:*",
+    "@app/slack": "workspace:*",
+    "@app/specs": "workspace:*",
+    "@hono/node-server": "^2.1.9",
+    "@slack/web-api": "^8.4.0",
+    "diff": "^8.0.4",
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.19",
+    "pg-boss": "^12.38.2"
+  }
+}

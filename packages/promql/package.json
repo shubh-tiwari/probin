@@ -1,0 +1,15 @@
+{
+  "name": "@app/promql",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@lezer/common": "^1.5.5",
+    "@lezer/highlight": "^1.2.5",
+    "@lezer/lr": "^1.4.12",
+    "@prometheus-io/lezer-promql": "^0.316.0"
+  }
+}

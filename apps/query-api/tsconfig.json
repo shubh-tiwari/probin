@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/promql"
+    },
+    {
+      "path": "../../packages/specs"
+    },
+    {
+      "path": "../../packages/db"
+    }
+  ]
+}

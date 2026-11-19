@@ -1,0 +1,5 @@
+fastapi>=0.115
+uvicorn>=0.30
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
+opentelemetry-instrumentation-fastapi

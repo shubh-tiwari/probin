@@ -1,0 +1,30 @@
+# EXAMPLE VALUES ONLY.
+#
+# No plan names, limits or prices have been decided (see "Open items" in
+# docs/build-plan.md). These numbers exist so local development and tests have
+# something to load. Do not ship them, and do not copy them into code.
+#
+# Shape: one flat monthly price per workspace (not per seat), with included
+# limits on metrics stored and model usage, and a time-limited free trial.
+
+currency: USD
+
+trial:
+  days: 14
+  plan: example
+
+plans:
+  - id: example
+    name: Example plan
+    price_monthly: 0
+    limits:
+      active_series: 10000
+      model_budget_monthly: 10
+      retention_days: 30
+    # A Stripe price id. The fake Stripe used in development accepts any value.
+    stripe_price: price_example_monthly
+
+# After a cancellation takes effect, how long until the workspace's data is deleted.
+# Members can download an export until then.
+cancellation:
+  grace_days: 7

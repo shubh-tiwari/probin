@@ -1,0 +1,11 @@
+{
+  "title": "POST /checkout/pay · p95 latency",
+  "type": "timeseries",
+  "query": "histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name=\"checkout\", http_route=\"/checkout/pay\", http_request_method=\"POST\"}[5m])))",
+  "unit": "s",
+  "display_unit": "ms",
+  "range": "5h",
+  "thresholds": [],
+  "request": "latency graph of checkout service in last 5 hr",
+  "assumptions": ["p95", "all requests including failures", "all regions combined"]
+}

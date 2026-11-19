@@ -1,0 +1,23 @@
+{
+  "name": "@app/ingest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "node --import tsx src/main.ts"
+  },
+  "dependencies": {
+    "@app/catalog": "workspace:*",
+    "@app/config": "workspace:*",
+    "@app/db": "workspace:*",
+    "@app/query-api": "workspace:*",
+    "@app/specs": "workspace:*",
+    "@hono/node-server": "^2.1.9",
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.19",
+    "pg-boss": "^12.38.2"
+  }
+}

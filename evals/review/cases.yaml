@@ -1,0 +1,127 @@
+# The review test set.
+#
+# Run by `pnpm verify:phase5` against the local stack, with the fake GitHub's
+# repository `acme/shop` (the two demo services).
+#
+# bottleneck: the slow endpoints seeded in the demo services, which the
+#   bottleneck report must rank first, each linked to the right handler.
+#   `match` is text on the handler's route line; the line number is read from
+#   the repository, so the cases survive edits elsewhere in the files.
+#
+# `{manifest}` in a path stands for the manifest file's name.
+#
+# pulls: pull requests with seeded convention breaks (and clean ones). The
+#   convention check must flag exactly the expected rules on the expected
+#   lines, and nothing else. `after` is text on the line to insert after.
+
+bottleneck:
+  top:
+    - service: checkout
+      route: POST /checkout/pay
+      file: checkout/server.cjs
+      match: "app.post('/checkout/pay'"
+    - service: inventory
+      route: GET /inventory/stock/history
+      file: inventory/main.py
+      match: '@app.get("/inventory/stock/history")'
+
+pulls:
+  - id: clean-comment
+    title: Explain the payment methods
+    edits:
+      - path: checkout/server.cjs
+        after: "const PAYMENT_METHODS = ['card', 'wallet', 'bank_transfer'];"
+        insert: ['// The payment methods the provider accepts.']
+    expect: []
+
+  - id: clean-new-endpoint-with-manifest
+    title: Add a readiness endpoint, with its manifest entry
+    edits:
+      - path: checkout/server.cjs
+        after: 'const server = app.listen(port, () => {'
+        before: true
+        insert: ["app.get('/checkout/ready', (_req, res) => res.json({ ready: true }));", '']
+      - path: checkout/{manifest}
+        after: 'endpoints:'
+        insert:
+          [
+            '  - method: GET',
+            '    route: /checkout/ready',
+            '    description: Says whether the service can take traffic',
+          ]
+    expect: []
+
+  - id: endpoint-missing-from-manifest
+    title: Add a deep health check
+    edits:
+      - path: checkout/server.cjs
+        after: 'const server = app.listen(port, () => {'
+        before: true
+        insert:
+          ["app.get('/checkout/health/deep', async (_req, res) => res.json({ ok: true }));", '']
+    expect:
+      - { rule: endpoint-in-manifest, path: checkout/server.cjs, contains: '/checkout/health/deep' }
+
+  - id: personal-attribute
+    title: Count orders per user
+    edits:
+      - path: checkout/server.cjs
+        after: "ordersCompleted.add(1, { 'payment.method': method });"
+        insert:
+          [
+            "  ordersCompleted.add(0, { 'payment.method': method, 'user.id': String(req.body?.user_id ?? '') });",
+          ]
+    expect:
+      - { rule: no-personal-or-secret-attributes, path: checkout/server.cjs, contains: "'user.id'" }
+
+  - id: unbounded-attribute
+    title: Record the order id on the counter
+    edits:
+      - path: checkout/server.cjs
+        after: "ordersCompleted.add(1, { 'payment.method': method });"
+        insert: ["  ordersCompleted.add(0, { 'payment.method': method, 'order.id': id });"]
+    expect:
+      - { rule: bounded-attributes, path: checkout/server.cjs, contains: "'order.id'" }
+
+  - id: request-counter
+    title: Count requests
+    edits:
+      - path: checkout/server.cjs
+        after: "const PAYMENT_METHODS = ['card', 'wallet', 'bank_transfer'];"
+        insert:
+          [
+            "const requestCount = metrics.getMeter('checkout').createCounter('http.server.requests', { unit: '{request}' });",
+          ]
+    expect:
+      - { rule: no-request-counter, path: checkout/server.cjs, contains: 'http.server.requests' }
+      - { rule: metric-in-manifest, path: checkout/server.cjs, contains: 'http.server.requests' }
+
+  - id: milliseconds-and-undeclared
+    title: Time the stock lookup
+    edits:
+      - path: inventory/main.py
+        after: 'meter = metrics.get_meter("inventory")'
+        insert:
+          [
+            'lookup_time = meter.create_histogram("stock.lookup.time", unit="ms", description="Stock lookup time")',
+          ]
+    expect:
+      - { rule: base-units, path: inventory/main.py, contains: 'stock.lookup.time' }
+      - { rule: metric-in-manifest, path: inventory/main.py, contains: 'stock.lookup.time' }
+
+  - id: service-name-in-metric
+    title: Count stock reservations
+    edits:
+      - path: inventory/main.py
+        after: 'meter = metrics.get_meter("inventory")'
+        insert:
+          [
+            'reservations = meter.create_counter("inventory.reservations", unit="{reservation}", description="Reservations")',
+          ]
+    expect:
+      - {
+          rule: no-service-in-metric-name,
+          path: inventory/main.py,
+          contains: 'inventory.reservations',
+        }
+      - { rule: metric-in-manifest, path: inventory/main.py, contains: 'inventory.reservations' }

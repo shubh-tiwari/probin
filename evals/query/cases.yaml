@@ -1,0 +1,450 @@
+# The query test set.
+#
+# Each case is a request a person might type, the answers to give if the agent
+# asks a question, and what a correct result looks like. `reference` is a query
+# that gives the right answer; the agent's query passes if it returns the same
+# data, whatever its text.
+#
+# The data comes from the demo services (infra/demo), so the stack must be up.
+# Run it with `pnpm evals:query`. See evals/README.md for how to read the result
+# and how to add a case.
+#
+# The cases are written the way people write, not the way that is easiest to
+# parse. Some are hard on purpose.
+
+# --- Latency: the request-duration histogram ---------------------------------
+
+- id: checkout-latency-example
+  request: latency graph of checkout service in last 5 hr
+  answers: { endpoint: POST /checkout/pay, percentile: '95' }
+  expect:
+    outcome: draft
+    asks: [endpoint, percentile]
+    range: 5h
+    type: timeseries
+    assumptions: [p95, all requests including failures, all regions combined]
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/pay", http_request_method="POST"}[5m])))
+
+- id: checkout-pay-p99
+  request: p99 latency of POST /checkout/pay on checkout service in the last 1 hour
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 1h
+    assumptions: [p99]
+    reference: histogram_quantile(0.99, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/pay", http_request_method="POST"}[5m])))
+
+- id: checkout-summary-median
+  request: median latency of /checkout/summary on the checkout service, last 30 minutes
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 30m
+    assumptions: [p50]
+    reference: histogram_quantile(0.5, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/summary"}[5m])))
+
+- id: checkout-all-endpoints-latency
+  request: checkout service latency across all endpoints for the past 24 hours
+  answers: { percentile: '95', requests: all }
+  expect:
+    outcome: draft
+    asks: [percentile, requests]
+    range: 24h
+    assumptions: [all endpoints combined]
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout"}[5m])))
+
+- id: checkout-how-slow-no-range
+  request: how slow is the checkout service
+  answers: { endpoint: all, percentile: '95' }
+  expect:
+    outcome: draft
+    asks: [endpoint, percentile]
+    range: null
+    assumptions: [p95, all endpoints combined, dashboard time range]
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout"}[5m])))
+
+- id: checkout-latency-by-endpoint
+  request: p95 latency of checkout service by endpoint including failures in last 6 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 6h
+    reference: histogram_quantile(0.95, sum by (le, http_route) (rate(http_server_request_duration_seconds_bucket{service_name="checkout"}[5m])))
+
+- id: checkout-order-lookup-p95
+  request: p95 latency of GET /checkout/orders/:id on checkout service in last 3 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 3h
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/orders/:id", http_request_method="GET"}[5m])))
+
+- id: checkout-response-time-wording
+  request: show me the response time for the checkout service over the past 2 hours
+  answers: { endpoint: GET /checkout/summary, percentile: '99' }
+  expect:
+    outcome: draft
+    asks: [endpoint, percentile]
+    range: 2h
+    assumptions: [p99]
+    reference: histogram_quantile(0.99, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/summary", http_request_method="GET"}[5m])))
+
+- id: checkout-pay-failed-latency
+  request: p95 latency of failed requests on POST /checkout/pay of checkout service in last 6 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 6h
+    assumptions: [failed requests only]
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/pay", http_request_method="POST", http_response_status_code=~"5.."}[5m])))
+
+- id: checkout-summary-successful-latency
+  request: p95 latency of successful requests on GET /checkout/summary for checkout service in the last 1 hour
+  expect:
+    outcome: draft
+    asks: []
+    range: 1h
+    assumptions: [successful requests only]
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/summary", http_request_method="GET", http_response_status_code!~"5.."}[5m])))
+
+- id: checkout-latency-90th
+  request: 90th percentile latency of /checkout/pay on checkout service including failures, last 12 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 12h
+    assumptions: [p90]
+    reference: histogram_quantile(0.9, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/pay"}[5m])))
+
+- id: checkout-payments-take-how-long
+  request: how long do payments take on checkout?
+  answers: { endpoint: POST /checkout/pay, percentile: '95' }
+  expect:
+    outcome: draft
+    range: null
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="checkout", http_route="/checkout/pay", http_request_method="POST"}[5m])))
+
+- id: checkout-latency-by-status
+  request: p95 latency of checkout service across all endpoints split by status code in last 6 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    range: 6h
+    reference: histogram_quantile(0.95, sum by (le, http_response_status_code) (rate(http_server_request_duration_seconds_bucket{service_name="checkout"}[5m])))
+
+# --- Traffic: counts come from the same histogram -----------------------------
+
+- id: checkout-rps
+  request: requests per second for checkout service in last 3 hours
+  answers: { endpoint: all, requests: all }
+  expect:
+    outcome: draft
+    asks: [endpoint, requests]
+    range: 3h
+    reference: sum(rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+- id: checkout-summary-traffic
+  request: traffic on GET /checkout/summary of checkout service in the last 2 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 2h
+    reference: sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_route="/checkout/summary", http_request_method="GET"}[5m]))
+
+- id: checkout-traffic-by-endpoint
+  request: checkout service traffic by endpoint in last 12 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 12h
+    reference: sum by (http_route) (rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+- id: checkout-traffic-now-stat
+  request: how many requests is the checkout service handling right now
+  answers: { endpoint: all, requests: all }
+  expect:
+    outcome: draft
+    type: stat
+    range: null
+    reference: sum(rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+- id: checkout-pay-throughput
+  request: throughput of POST /checkout/pay on checkout service including failures over the last 7 days
+  expect:
+    outcome: draft
+    asks: []
+    range: 7d
+    reference: sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_route="/checkout/pay", http_request_method="POST"}[5m]))
+
+- id: checkout-traffic-by-method
+  request: checkout service requests per second across all endpoints by method in last 1 hour
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    range: 1h
+    reference: sum by (http_request_method) (rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+- id: checkout-successful-traffic
+  request: successful requests per second on checkout service for all endpoints in last 4 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 4h
+    reference: sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_response_status_code!~"5.."}[5m]))
+
+# --- Errors -------------------------------------------------------------------
+
+- id: checkout-error-rate
+  request: error rate of checkout service in the last 6 hours
+  answers: { endpoint: all }
+  expect:
+    outcome: draft
+    asks: [endpoint]
+    range: 6h
+    assumptions: [errors are responses with status 5xx]
+    reference: (sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_response_status_code=~"5.."}[5m])) or vector(0)) / sum(rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+- id: checkout-pay-error-rate
+  request: error rate of POST /checkout/pay on checkout service, last 24 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 24h
+    reference: (sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_route="/checkout/pay", http_request_method="POST", http_response_status_code=~"5.."}[5m])) or vector(0)) / sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_route="/checkout/pay", http_request_method="POST"}[5m]))
+
+- id: checkout-failures-wording
+  request: how often does the checkout service fail? last 3 hours
+  answers: { endpoint: all }
+  expect:
+    outcome: draft
+    range: 3h
+    reference: (sum(rate(http_server_request_duration_seconds_count{service_name="checkout", http_response_status_code=~"5.."}[5m])) or vector(0)) / sum(rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+- id: checkout-error-rate-by-endpoint
+  request: checkout service error rate by endpoint over the last 12 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 12h
+    reference: sum by (http_route) (rate(http_server_request_duration_seconds_count{service_name="checkout", http_response_status_code=~"5.."}[5m])) / sum by (http_route) (rate(http_server_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+# --- Outbound calls -----------------------------------------------------------
+
+- id: checkout-outbound-latency
+  request: p95 latency of outbound calls from checkout service in last 2 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 2h
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_client_request_duration_seconds_bucket{service_name="checkout"}[5m])))
+
+- id: checkout-downstream-traffic
+  request: how many downstream calls per second does the checkout service make, last 6 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    range: 6h
+    reference: sum(rate(http_client_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+# --- Business metrics ---------------------------------------------------------
+
+- id: checkout-orders-completed
+  request: orders completed on checkout service in last 24 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 24h
+    reference: sum(rate(orders_completed_total{service_name="checkout"}[5m]))
+
+- id: orders-by-payment-method-no-service
+  request: orders completed by payment method in the last 6 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 6h
+    reference: sum by (payment_method) (rate(orders_completed_total{service_name="checkout"}[5m]))
+
+- id: checkout-orders-bar
+  request: bar chart of orders completed by payment method for checkout service in last 7 days
+  expect:
+    outcome: draft
+    asks: []
+    type: bar
+    range: 7d
+    reference: sum by (payment_method) (rate(orders_completed_total{service_name="checkout"}[5m]))
+
+- id: checkout-orders-paid-wording
+  request: how many orders are getting paid on checkout, past 12 hours
+  expect:
+    outcome: draft
+    range: 12h
+    reference: sum(rate(orders_completed_total{service_name="checkout"}[5m]))
+
+# --- A second service ---------------------------------------------------------
+
+- id: inventory-item-lookup-p95
+  request: p95 latency of GET /inventory/items/{item_id} on inventory service in last 2 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 2h
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="inventory", http_route="/inventory/items/{item_id}", http_request_method="GET"}[5m])))
+
+- id: inventory-latency-asks
+  request: latency of inventory service in the last 6 hours
+  answers: { endpoint: POST /inventory/reserve, percentile: '99' }
+  expect:
+    outcome: draft
+    asks: [endpoint, percentile]
+    range: 6h
+    assumptions: [p99, all requests including failures]
+    reference: histogram_quantile(0.99, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="inventory", http_route="/inventory/reserve", http_request_method="POST"}[5m])))
+
+- id: inventory-reserve-traffic
+  request: requests per second on POST /inventory/reserve for inventory service, last 3 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    asks: [requests]
+    range: 3h
+    reference: sum(rate(http_server_request_duration_seconds_count{service_name="inventory", http_route="/inventory/reserve", http_request_method="POST"}[5m]))
+
+- id: inventory-error-rate-no-errors
+  request: error rate of inventory service in last 24 hours
+  answers: { endpoint: all }
+  expect:
+    outcome: draft
+    asks: [endpoint]
+    range: 24h
+    reference: (sum(rate(http_server_request_duration_seconds_count{service_name="inventory", http_response_status_code=~"5.."}[5m])) or vector(0)) / sum(rate(http_server_request_duration_seconds_count{service_name="inventory"}[5m]))
+
+- id: inventory-stock-typical-latency
+  request: typical latency of GET /inventory/stock on inventory service including failures, past 30 minutes
+  expect:
+    outcome: draft
+    asks: []
+    range: 30m
+    assumptions: [p50]
+    reference: histogram_quantile(0.5, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="inventory", http_route="/inventory/stock", http_request_method="GET"}[5m])))
+
+- id: inventory-traffic-by-status
+  request: inventory service traffic by status code for all endpoints, last 3 hours
+  answers: { requests: all }
+  expect:
+    outcome: draft
+    range: 3h
+    reference: sum by (http_response_status_code) (rate(http_server_request_duration_seconds_count{service_name="inventory"}[5m]))
+
+- id: inventory-stock-per-warehouse
+  request: stock level per warehouse for inventory service in last 12 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 12h
+    reference: sum by (warehouse) (stock_level{service_name="inventory"})
+
+- id: stock-total-no-service
+  request: total units in stock over the last 24 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 24h
+    reference: sum(stock_level{service_name="inventory"})
+
+- id: inventory-stock-one-warehouse-stat
+  request: current stock level in the blr warehouse
+  expect:
+    outcome: draft
+    type: stat
+    reference: sum(stock_level{service_name="inventory", warehouse="blr"})
+
+- id: inventory-restock-how-long
+  request: how long does the restock job take on inventory service? last 6 hours
+  answers: { percentile: '95' }
+  expect:
+    outcome: draft
+    asks: [percentile]
+    range: 6h
+    reference: histogram_quantile(0.95, sum by (le) (rate(stock_restock_duration_seconds_bucket{service_name="inventory"}[5m])))
+
+- id: inventory-restock-median-by-result
+  request: median restock duration by result for inventory service in last 12 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 12h
+    reference: histogram_quantile(0.5, sum by (le, job_result) (rate(stock_restock_duration_seconds_bucket{service_name="inventory"}[5m])))
+
+- id: inventory-restock-runs-by-result
+  request: restock job runs per second by result on inventory service, last 24 hours
+  expect:
+    outcome: draft
+    range: 24h
+    reference: sum by (job_result) (rate(stock_restock_duration_seconds_count{service_name="inventory"}[5m]))
+
+# --- No service named, or more than one ---------------------------------------
+
+- id: latency-which-service
+  request: p95 latency including failures in last 1 hour
+  answers: { service: inventory, endpoint: all }
+  expect:
+    outcome: draft
+    asks: [service, endpoint]
+    range: 1h
+    assumptions: [p95, all endpoints combined]
+    reference: histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name="inventory"}[5m])))
+
+- id: traffic-all-services
+  request: traffic across all services in the last 6 hours
+  answers: { service: '*', requests: all }
+  expect:
+    outcome: draft
+    asks: [service, requests]
+    range: 6h
+    assumptions: [all services combined]
+    reference: sum(rate(http_server_request_duration_seconds_count[5m]))
+
+- id: checkout-outbound-error-rate
+  request: error rate of outbound calls from checkout service in last 6 hours
+  expect:
+    outcome: draft
+    asks: []
+    range: 6h
+    reference: (sum(rate(http_client_request_duration_seconds_count{service_name="checkout", http_response_status_code=~"5.."}[5m])) or vector(0)) / sum(rate(http_client_request_duration_seconds_count{service_name="checkout"}[5m]))
+
+# --- Nothing matches: say so, never guess ------------------------------------
+
+- id: nomatch-kafka-lag
+  request: kafka consumer lag of checkout service
+  expect: { outcome: no_match }
+
+- id: nomatch-unknown-service
+  request: latency of billing service in the last hour
+  expect: { outcome: no_match }
+
+- id: nomatch-cpu
+  request: cpu usage in the last 6 hours
+  expect: { outcome: no_match }
+
+- id: nomatch-unknown-endpoint
+  request: p95 latency of /checkout/refund on checkout service
+  expect: { outcome: no_match }
+
+- id: nomatch-memory-of-service
+  request: memory used by the checkout service in last 24 hours
+  expect: { outcome: no_match }
+
+- id: nomatch-database
+  request: slow database queries on checkout service today
+  expect: { outcome: no_match }
+
+- id: nomatch-queue-depth
+  request: queue depth of inventory service in the last hour
+  expect: { outcome: no_match }

@@ -1,0 +1,8 @@
+{
+  "name": "Checkout p95 high in ap-south",
+  "expr": "<query> > 0.8",
+  "for": "5m",
+  "severity": "warning",
+  "channel": "#ops-monitoring",
+  "status": "pending"
+}

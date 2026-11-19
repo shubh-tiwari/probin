@@ -1,0 +1,70 @@
+# OpenTelemetry Collector between the ingestion endpoint and the metrics store.
+#
+# It is private: only the ingestion service can reach it. The ingestion
+# service has already checked the sender's key and passes the workspace in the
+# x-workspace-id header. This pipeline then:
+#   1. keeps a short allow-list of resource attributes, which also removes any
+#      `workspace` attribute the sender set;
+#   2. stamps `workspace` from the header;
+#   3. drops anything that still has no workspace, so nothing unlabelled can
+#      reach the store even if this collector is called without the header;
+#   4. forwards over Prometheus remote write, which turns OpenTelemetry names
+#      into the stored names (http.server.request.duration in seconds becomes
+#      http_server_request_duration_seconds_bucket / _sum / _count).
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+        # Makes request headers available to processors as `metadata.<header>`.
+        include_metadata: true
+
+processors:
+  # Resource attributes become labels on every series, so keep a short fixed
+  # list. This drops per-process and per-host attributes (pid, host name)
+  # that would otherwise create a new series on every restart.
+  transform/resource-allowlist:
+    error_mode: ignore
+    metric_statements:
+      - context: resource
+        statements:
+          - keep_keys(resource.attributes, ["service.name", "service.namespace", "service.version", "deployment.environment.name"])
+
+  resource/workspace:
+    attributes:
+      - key: workspace
+        from_context: metadata.x-workspace-id
+        action: upsert
+
+  filter/require-workspace:
+    error_mode: propagate
+    metrics:
+      metric:
+        - resource.attributes["workspace"] == nil or resource.attributes["workspace"] == ""
+
+  batch:
+    timeout: 2s
+
+exporters:
+  prometheusremotewrite:
+    endpoint: ${env:METRICS_STORE_REMOTE_WRITE_URL}
+    # Copy resource attributes (service.name, workspace) onto every series as
+    # labels (service_name, workspace) instead of only onto target_info.
+    resource_to_telemetry_conversion:
+      enabled: true
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      # The workspace is stamped before batching, while the request's headers
+      # are still attached to the data.
+      processors:
+        [transform/resource-allowlist, resource/workspace, filter/require-workspace, batch]
+      exporters: [prometheusremotewrite]

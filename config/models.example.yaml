@@ -1,0 +1,63 @@
+# Which model each kind of task uses. Read by packages/router; no model id is
+# written in code.
+#
+# The models below are CANDIDATES, not a decision. A model is used for a tier
+# only after it passes the test set in evals/ for that tier; the passes are
+# recorded in the eligibility file. Prices are OpenRouter's list prices on
+# 2026-11-18 in USD per million tokens, used to rank models by cost and as a
+# fallback when a response does not report its own cost.
+
+# table: route by task type using the tiers below (the default).
+# openrouter_auto: send every task to OpenRouter's own router. Kept so the two
+# can be compared on the test set, which is an open item in the build plan.
+strategy: table
+auto_model: openrouter/auto
+
+# Cheapest tier first. After two failures on a request the router moves one
+# tier down this list.
+tiers:
+  - id: fast
+    models:
+      - id: deepseek/deepseek-v4.1-flash-1017
+        input_per_mtok: 0.036
+        output_per_mtok: 0.5
+      - id: openai/gpt-6-luna
+        input_per_mtok: 0.1
+        output_per_mtok: 0.5
+      - id: anthropic/claude-haiku-5.5
+        input_per_mtok: 0.1
+        output_per_mtok: 0.5
+  - id: standard
+    models:
+      - id: mistralai/mistral-large-4-0
+        input_per_mtok: 0.7
+        output_per_mtok: 2.1
+      - id: openai/gpt-6.1-terra
+        input_per_mtok: 1
+        output_per_mtok: 5
+      - id: qwen/qwen4-max
+        input_per_mtok: 1.425
+        output_per_mtok: 4.275
+  - id: strong
+    models:
+      - id: anthropic/claude-sonnet-5.5
+        input_per_mtok: 2
+        output_per_mtok: 10
+      - id: openai/gpt-6.2-sol
+        input_per_mtok: 2
+        output_per_mtok: 10
+
+tasks:
+  parse: fast
+  ask: fast
+  write_query: standard
+  explain: strong
+  review: strong
+
+budget:
+  # From this share of the monthly budget on, the router picks the cheapest
+  # eligible model in the tier instead of the first listed.
+  near_cap_ratio: 0.8
+
+# Written by the test set. A model missing from it is never used.
+eligibility_file: evals/eligibility.json

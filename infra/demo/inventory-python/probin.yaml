@@ -1,0 +1,30 @@
+service: inventory
+description: Item lookup, stock reservation, and a background job that restocks the warehouses
+endpoints:
+  - method: GET
+    route: /inventory/items/{item_id}
+    description: Returns one item and where it is in stock
+  - method: GET
+    route: /inventory/stock
+    description: Returns units in stock per warehouse
+  - method: GET
+    route: /inventory/stock/history
+    description: Returns daily stock per warehouse for the last 30 days
+  - method: POST
+    route: /inventory/reserve
+    description: Reserves stock for an order from the warehouse that has the most
+metrics:
+  - name: http.server.request.duration
+    type: histogram
+    unit: s
+    description: Duration of requests this service handles
+  - name: stock.level
+    type: gauge
+    unit: "{item}"
+    description: Units in stock per warehouse
+    attributes: [warehouse]
+  - name: stock.restock.duration
+    type: histogram
+    unit: s
+    description: Duration of the restock job that tops every warehouse back up
+    attributes: [job.name, job.result]

@@ -1,0 +1,45 @@
+{
+  "name": "app-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:integration": "node --env-file-if-exists=.env node_modules/vitest/vitest.mjs run --config vitest.integration.config.ts",
+    "check:product-name": "tsx scripts/check-product-name.ts",
+    "db:generate": "pnpm --filter @app/db run generate",
+    "db:migrate": "tsx --env-file-if-exists=.env packages/db/src/cli/migrate.ts",
+    "db:seed": "tsx --env-file-if-exists=.env scripts/seed-dev.ts",
+    "skill:build": "tsx scripts/build-skill.ts",
+    "conformance": "tsx --env-file-if-exists=.env scripts/conformance.ts",
+    "evals:query": "tsx --env-file-if-exists=.env evals/query/run.ts",
+    "slack:manifest": "tsx scripts/slack-manifest.ts",
+    "ask": "tsx --env-file-if-exists=.env apps/agent/src/cli/ask.ts",
+    "ws:create": "tsx --env-file-if-exists=.env apps/ingest/src/cli/workspace.ts create",
+    "ws:rotate-key": "tsx --env-file-if-exists=.env apps/ingest/src/cli/workspace.ts rotate-key",
+    "verify:phase0": "tsx --env-file-if-exists=.env scripts/verify-phase0.ts",
+    "verify:phase1": "tsx --env-file-if-exists=.env scripts/verify-phase1.ts",
+    "verify:phase2": "tsx --env-file-if-exists=.env scripts/verify-phase2.ts",
+    "verify:phase3": "tsx --env-file-if-exists=.env scripts/verify-phase3.ts",
+    "verify:phase4": "tsx --env-file-if-exists=.env scripts/verify-phase4.ts",
+    "verify:phase5": "tsx --env-file-if-exists=.env scripts/verify-phase5.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.0"
+  }
+}

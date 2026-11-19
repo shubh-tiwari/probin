@@ -1,0 +1,23 @@
+{
+  "name": "@app/slack",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@app/agent": "workspace:*",
+    "@app/charts": "workspace:*",
+    "@app/config": "workspace:*",
+    "@app/db": "workspace:*",
+    "@app/ingest": "workspace:*",
+    "@app/query-api": "workspace:*",
+    "@app/specs": "workspace:*",
+    "@hono/node-server": "^2.1.9",
+    "@slack/bolt": "^5.1.0",
+    "@slack/web-api": "^8.4.0",
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.19"
+  }
+}

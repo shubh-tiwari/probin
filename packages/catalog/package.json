@@ -1,0 +1,14 @@
+{
+  "name": "@app/catalog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@app/db": "workspace:*",
+    "@app/specs": "workspace:*",
+    "drizzle-orm": "^0.45.4"
+  }
+}

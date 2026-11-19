@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/config" },
+    { "path": "packages/specs" },
+    { "path": "packages/db" },
+    { "path": "packages/promql" },
+    { "path": "packages/catalog" },
+    { "path": "packages/router" },
+    { "path": "packages/memory" },
+    { "path": "packages/charts" },
+    { "path": "apps/agent" },
+    { "path": "apps/query-api" },
+    { "path": "apps/slack" },
+    { "path": "apps/web" },
+    { "path": "apps/alerts" },
+    { "path": "apps/ingest" },
+    { "path": "apps/review" },
+    { "path": "apps/connector" },
+    { "path": "scripts" },
+    { "path": "evals" }
+  ]
+}

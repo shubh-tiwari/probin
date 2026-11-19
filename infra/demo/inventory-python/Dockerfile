@@ -1,0 +1,12 @@
+FROM python:3.13-slim
+WORKDIR /app
+ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
+# Name this service reports metrics under. Must match `service` in probin.yaml. Not a secret.
+ENV OTEL_SERVICE_NAME=inventory
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+COPY . .
+RUN useradd --create-home app
+USER app
+EXPOSE 8080
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

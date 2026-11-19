@@ -1,0 +1,21 @@
+{
+  "name": "@app/query-api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "start": "node --import tsx src/main.ts"
+  },
+  "dependencies": {
+    "@app/config": "workspace:*",
+    "@app/db": "workspace:*",
+    "@app/promql": "workspace:*",
+    "@app/specs": "workspace:*",
+    "@hono/node-server": "^2.1.9",
+    "hono": "^4.13.19"
+  }
+}
