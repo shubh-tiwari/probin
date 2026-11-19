@@ -191,6 +191,22 @@ try {
     return `4 ranges, ${charts} chart refreshes, model_calls unchanged at ${after}`;
   });
 
+  await step('the overview shows the request flow, health and load from live metrics', async () => {
+    const before = await modelCalls();
+    for (const range of ['1h', '6h', '24h']) {
+      const page = await web.get(`/overview?range=${range}`);
+      assert(page.status === 200, `overview HTTP ${page.status}`);
+      assert(page.html.includes('Request flow'), 'no request flow');
+      assert(/POST \/checkout\/pay/.test(page.html), 'the payment endpoint is not in the flow');
+      assert(page.html.includes('Request scorecard'), 'no scorecard');
+      const problems = accessibilityProblems(page.html);
+      assert(problems.length === 0, problems.join('; '));
+    }
+    const after = await modelCalls();
+    assert(after === before, `${after - before} model calls were made`);
+    return '3 ranges; flow, health and scorecard shown; no model calls';
+  });
+
   await step('a repeated request reuses its query with no model call', async () => {
     const text =
       'p95 latency of GET /checkout/summary on checkout service including failures in last 2 hours';

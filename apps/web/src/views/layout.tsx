@@ -6,7 +6,7 @@ import { COLORS, DARK_COLORS } from '../theme.js';
 
 /** CSS custom properties for one palette. */
 const vars = (selector: string, c: typeof COLORS) =>
-  `${selector}{color-scheme:${c === COLORS ? 'light' : 'dark'};--page:${c.page};--surface:${c.surface};--text:${c.text};--secondary:${c.secondary};--muted:${c.muted};--border:${c.border};--control:${c.control};--divider:${c.divider};--accent:${c.accent};--accent-hover:${c.accentHover};--accent-button:${c.accentButton};--on-accent:${c.onAccent};--accent-soft:${c.accentSoft};--accent-soft-text:${c.accentSoftText};--warning:${c.warning};--on-warning:${c.onWarning};--pending-bg:${c.pendingBg};--pending-text:${c.pendingText};--danger:${c.danger}}`;
+  `${selector}{color-scheme:${c === COLORS ? 'light' : 'dark'};--page:${c.page};--surface:${c.surface};--text:${c.text};--secondary:${c.secondary};--muted:${c.muted};--border:${c.border};--control:${c.control};--divider:${c.divider};--accent:${c.accent};--accent-hover:${c.accentHover};--accent-button:${c.accentButton};--on-accent:${c.onAccent};--accent-soft:${c.accentSoft};--accent-soft-text:${c.accentSoftText};--warning:${c.warning};--on-warning:${c.onWarning};--pending-bg:${c.pendingBg};--pending-text:${c.pendingText};--danger:${c.danger};--good:${c.good}}`;
 
 const CSS = `
 ${vars(':root', COLORS)}
@@ -78,7 +78,54 @@ th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--divider);ve
 th{font-size:12px;color:var(--muted);font-weight:600}
 .page{max-width:1100px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:16px}
 @media (max-width:900px){.grid > *{grid-column:1 / -1 !important}.ask{border-right:0;border-bottom:1px solid var(--border)}}
-`;
+
+.ov{max-width:1360px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:18px}
+.ov-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.ov-title{font-size:28px;font-weight:700;letter-spacing:-0.02em}
+.ov-sub{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.ov-ranges{display:flex;gap:4px;padding:4px;border:1px solid var(--border);border-radius:999px;background:var(--surface)}
+.ov-ranges a{padding:6px 14px;border-radius:999px;text-decoration:none;color:var(--secondary);font-size:13.5px}
+.ov-ranges a[aria-current=page]{background:var(--accent-button);color:var(--on-accent)}
+.ov-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+.ov-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ov-side{display:flex;flex-direction:column;gap:16px}
+.ov-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ov-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ov-card header{display:flex;justify-content:space-between;align-items:center}
+.ov-card h2{font-size:15px;font-weight:600}
+.ov-open{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--border);text-decoration:none;color:var(--secondary);font-size:14px}
+.ov-metrics{display:flex;gap:18px;flex-wrap:wrap}
+.ov-metric{display:flex;flex-direction:column}
+.ov-metric b{font-size:24px;font-weight:600;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+.ov-metric span{color:var(--muted);font-size:12.5px}
+.ov-legend{list-style:none;margin:0;padding:0;display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--secondary)}
+.ov-legend li{display:flex;align-items:center;gap:6px}
+.ov-legend i,.ov-list i{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.ov-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px}
+.ov-list li{display:flex;align-items:center;gap:8px}
+.ov-health{display:flex;flex-direction:column;gap:14px}
+.ov-health-head{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600}
+.ov-muted-text{color:var(--muted);font-weight:400;font-size:12.5px}
+.ov-segments{display:flex;gap:5px;margin-top:8px}
+.ov-segments span{flex:1;height:8px;border-radius:999px}
+.ov-caption{margin:6px 0 0;color:var(--muted);font-size:12px}
+.ov-score{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ov-score li{display:grid;grid-template-columns:92px 1fr 48px;align-items:center;gap:10px;font-size:13px}
+.ov-score-name{display:flex;flex-direction:column}.ov-score-name small{color:var(--muted);font-size:11px}
+.ov-score-track{height:8px;border-radius:999px;background:repeating-linear-gradient(135deg,var(--divider) 0 4px,transparent 4px 7px)}
+.ov-score-track span{display:block;height:100%;border-radius:999px}
+.ov-score-value{text-align:right;font-variant-numeric:tabular-nums}
+.ov-good{background:var(--good);fill:var(--good)}.ov-warn{background:var(--warning);fill:var(--warning)}.ov-bad{background:var(--danger);fill:var(--danger)}
+.ov-good-stroke{stroke:var(--good)}.ov-warn-stroke{stroke:var(--warning)}.ov-bad-stroke{stroke:var(--danger)}
+.ov-text-good{fill:var(--good);color:var(--good)}.ov-text-warn{fill:var(--warning);color:var(--warning)}.ov-text-bad{fill:var(--danger);color:var(--danger)}
+.ov-band{opacity:.55}.ov-band.ov-good{opacity:.45}.ov-call{fill:var(--accent);opacity:.4}
+.ov-node{fill:var(--page);stroke:var(--border)}
+.ov-strong{fill:var(--text);font-weight:600}.ov-muted{fill:var(--muted)}
+.ov-stem{stroke:var(--divider);stroke-width:1}
+.ov-threshold{stroke:var(--warning);stroke-dasharray:4 4;opacity:.7}
+.ov-tag{fill:var(--page);stroke:var(--border)}
+.ov-needle{stroke:var(--text)}.ov-needle-dot{fill:var(--text)}
+@media (max-width:1100px){.ov-grid{grid-template-columns:1fr}.ov-kpis{grid-template-columns:1fr}}`;
 
 export function Layout(props: { title: string; children: Child; scripts?: boolean }) {
   return (
@@ -109,7 +156,7 @@ export function Layout(props: { title: string; children: Child; scripts?: boolea
 /** The bar across the top of every signed-in page. */
 export function TopBar(props: {
   title: string;
-  current: 'dashboard' | 'memory' | 'alerts' | 'collectors' | 'settings' | 'review';
+  current: 'overview' | 'dashboard' | 'memory' | 'alerts' | 'collectors' | 'settings' | 'review';
   extra?: Child;
   userName: string;
 }) {
@@ -120,6 +167,9 @@ export function TopBar(props: {
       </a>
       <h1>{props.title}</h1>
       <nav aria-label="Pages">
+        <a href="/overview" aria-current={props.current === 'overview' ? 'page' : undefined}>
+          Overview
+        </a>
         <a href="/" aria-current={props.current === 'dashboard' ? 'page' : undefined}>
           Dashboard
         </a>

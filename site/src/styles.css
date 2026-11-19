@@ -546,6 +546,13 @@ h3 {
   background: var(--night-2);
 }
 
+.overview {
+  padding-block: 56px 32px;
+}
+.shot.wide {
+  width: 100%;
+}
+
 .promise-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

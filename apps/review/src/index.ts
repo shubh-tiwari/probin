@@ -27,3 +27,4 @@ export {
   type ProductionContext,
   type SourceFile,
 } from './context.js';
+export { endpointStats, outboundCalls, type EndpointStats } from './metrics.js';

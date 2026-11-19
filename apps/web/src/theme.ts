@@ -26,6 +26,7 @@ export const COLORS = {
   pendingText: '#7A3A05',
   danger: '#A61B1B',
   onWarning: '#FFFFFF',
+  good: '#1A7F37',
 };
 
 /** The dark look, in the product site's language: night navy, violet light. */
@@ -49,6 +50,7 @@ export const DARK_COLORS: typeof COLORS = {
   pendingText: '#F8D58A',
   danger: '#FF8A8A',
   onWarning: '#1A1300',
+  good: '#5EE08A',
 };
 
 export const CHART_THEME: ChartTheme = {

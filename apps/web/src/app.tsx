@@ -44,6 +44,8 @@ import { mountAuth } from './auth.js';
 import { CLIENT_SCRIPT } from './client-script.js';
 import { SESSION_COOKIE, openSession, type Session } from './session.js';
 import { CHART_THEME, DARK_CHART_THEME } from './theme.js';
+import { gatherOverview } from './overview/data.js';
+import { OverviewPage } from './views/overview.js';
 import { Chart, DashboardPage, RANGES, type ChartView, type PanelView } from './views/dashboard.js';
 import { MessagePage } from './views/layout.js';
 import { MemoryPage } from './views/memory.js';
@@ -1248,6 +1250,34 @@ export function createWebApp(options: WebOptions) {
           .where(eq(schema.users.workspaceId, workspaceId))
       ).map((p) => [p.id, p.name]),
     );
+
+  /** The overview: request flow, load, response time, errors and health, from live metrics. */
+  app.get('/overview', async (c) => {
+    const session = c.get('session');
+    const asked = c.req.query('range');
+    const range = asked === '6h' || asked === '24h' ? asked : '1h';
+    const [overview, rules, states] = await Promise.all([
+      gatherOverview({
+        query: queryFor(session),
+        services: await listServices(options.db, session.workspaceId),
+        range,
+      }),
+      createAlertStore(options.db, session.workspaceId).list(),
+      options.db
+        .select()
+        .from(schema.alertStates)
+        .where(eq(schema.alertStates.workspaceId, session.workspaceId)),
+    ]);
+    const firingIds = new Set(states.filter((s) => s.state === 'firing').map((s) => s.ruleId));
+    const alerts = {
+      firing: rules
+        .filter((r) => r.spec.status === 'active' && firingIds.has(r.id))
+        .map((r) => r.spec.name),
+      pending: rules.filter((r) => r.spec.status === 'pending').map((r) => r.spec.name),
+      active: rules.filter((r) => r.spec.status === 'active').length,
+    };
+    return c.html(<OverviewPage userName={session.name} overview={overview} alerts={alerts} />);
+  });
 
   app.get('/alerts', async (c) => {
     const session = c.get('session');

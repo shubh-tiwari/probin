@@ -69,6 +69,14 @@ shown, and it has already been run against your data.
 3. **Keep it, watch it.** Save it to a dashboard, or turn it into an alert that waits for a person
    to approve it.
 
+### The Overview
+
+All of production on one page: how requests flow through services and endpoints, coloured by
+health, the calls between services, load, response time, errors, endpoint health and a request
+scorecard, for the last hour, 6 hours or 24 hours. Everything on it comes from live metrics.
+
+<img src="docs/screenshots/web-overview.png" alt="The Overview page: a request flow map from services through their endpoints, coloured by health, with load, response time and error cards, alerts, endpoint health bars and a request scorecard" width="100%" />
+
 ### What you get
 
 <table>
