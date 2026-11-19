@@ -8,7 +8,7 @@
  * No dependencies, so Vercel can run it without installing the workspace.
  */
 import { execSync } from 'node:child_process';
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -32,11 +32,15 @@ function repository() {
 }
 
 const repo = repository();
+// Link previews need an absolute image URL. Vercel names the production domain at build time.
+const production = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+const siteUrl = production ? `https://${production}` : '';
 const fill = (file) => {
   const html = readFileSync(at(`site/src/${file}`), 'utf8')
     .replaceAll('{{NAME}}', name)
     .replaceAll('{{REPO_URL}}', repo.url)
-    .replaceAll('{{REPO_SLUG}}', repo.slug);
+    .replaceAll('{{REPO_SLUG}}', repo.slug)
+    .replaceAll('{{SITE_URL}}', siteUrl);
   const left = /\{\{[A-Z_]+\}\}/.exec(html);
   if (left) throw new Error(`Unfilled placeholder in site/src/${file}: ${left[0]}`);
   return html;
@@ -45,8 +49,9 @@ const fill = (file) => {
 const out = at('site/dist');
 rmSync(out, { recursive: true, force: true });
 mkdirSync(`${out}/shots`, { recursive: true });
-writeFileSync(`${out}/index.html`, fill('index.html'));
-writeFileSync(`${out}/poster.html`, fill('poster.html'));
+for (const page of readdirSync(at('site/src')).filter((file) => file.endsWith('.html'))) {
+  writeFileSync(`${out}/${page}`, fill(page));
+}
 cpSync(at('site/src/favicon.svg'), `${out}/favicon.svg`);
 cpSync(at('docs/screenshots'), `${out}/shots`, { recursive: true });
 console.log(`Built the site for ${name} into site/dist (repository: ${repo.url}).`);

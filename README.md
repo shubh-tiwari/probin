@@ -9,6 +9,8 @@ and hands back a chart that shows its working. Then it reviews your code with th
 
 **Built for teams whose software is written by coding agents like Claude Code.**
 
+**[Live site: probin-wine.vercel.app](https://probin-wine.vercel.app)**
+
 [![Deploy the site with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshubh-tiwari%2Fprobin)
 
 ![Node 22](https://img.shields.io/badge/node-22-2463eb)
@@ -21,7 +23,7 @@ and hands back a chart that shows its working. Then it reviews your code with th
 
 <br />
 
-<img src="docs/screenshots/poster.png" alt="Probin: ask your production a question. A Slack thread where Probin asks two questions and answers with a p95 latency chart." width="100%" />
+<img src="docs/screenshots/poster-future.png" alt="Probin: ask your production a question. An hour of real checkout latency glows across the poster; where it crosses the 1200 ms threshold an alert is drafted for approval." width="100%" />
 
 </div>
 
