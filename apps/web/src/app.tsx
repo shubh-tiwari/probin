@@ -1,5 +1,5 @@
 /** @jsxRuntime automatic @jsxImportSource hono/jsx */
-import { AgentApiError, createAgentClient, type AgentReply } from '@app/agent/client';
+import { AgentApiError, createAgentClient, type AgentReply } from '@app/agent-client';
 import { readChart, renderSvg } from '@app/charts';
 import { listEndpoints, listMetrics, listServices, searchCatalog } from '@app/catalog';
 import type { PlansConfig, SecretBox } from '@app/config';

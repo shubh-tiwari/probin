@@ -15,6 +15,7 @@ and hands back a chart that shows its working. Then it reviews your code with th
 
 ![Node 22](https://img.shields.io/badge/node-22-2463eb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-2463eb)
+![Python](https://img.shields.io/badge/Python-3.13-2463eb)
 ![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-native-2463eb)
 ![Runs locally](https://img.shields.io/badge/runs%20locally-no%20keys%20needed-d4900c)
 
@@ -24,7 +25,7 @@ and hands back a chart that shows its working. Then it reviews your code with th
 
 <br />
 
-<img src="docs/screenshots/poster-future.png" alt="Probin: ask your production a question. An hour of real checkout latency glows across the poster; where it crosses the 1200 ms threshold an alert is drafted for approval." width="100%" />
+<img src="docs/screenshots/banner.png" alt="Probin: ask your production a question. An alert card and an hour of real checkout latency, peaking at 1.38 seconds." width="100%" />
 
 </div>
 
@@ -184,7 +185,7 @@ These rules are enforced in code, not in a prompt:
 
 ## Quick start
 
-You need Node 22.12 or newer, pnpm, Docker with Compose, and Make.
+You need Node 22.12 or newer, pnpm, [uv](https://docs.astral.sh/uv/) (for the Python agent), Docker with Compose, and Make.
 
 ```sh
 git clone https://github.com/shubh-tiwari/probin.git
@@ -217,6 +218,8 @@ flowchart LR
   slack[Slack] --> agent
   web[Web tool] --> agent
   agent -- dry run --> qapi[Query API<br/>scoping, limits]
+  agent -- catalog, specs --> platform[Platform<br/>shared rules, stores]
+  platform --> pg
   qapi --> vm
   agent -- tiered models --> router[Model router] --> or[OpenRouter]
   alerts[Alert engine] --> qapi
@@ -224,7 +227,9 @@ flowchart LR
   gh[GitHub] --> review
 ```
 
-Only the Query API can reach the metrics store, and only the agent calls a model.
+Only the Query API can reach the metrics store, and only the agent calls a model. The agent, the
+model router and the connector are Python; every other service is TypeScript. Rules both sides need
+(catalog search, query analysis, spec validation, the stores) live once, in the platform service.
 
 <details>
 <summary><b>Repository layout</b></summary>
@@ -233,19 +238,22 @@ Only the Query API can reach the metrics store, and only the agent calls a model
 apps/
   ingest/      ingestion endpoint: keys, OTLP in, manifest registration, catalog sync
   query-api/   the only service that talks to the metrics store: limits, isolation, cache
-  agent/       the one agent: tools, the "get a metric" loop, prompts
+  agent/       the one agent (Python): tools, the "get a metric" loop, prompts, the query test set
+  platform/    catalog search, query analysis, spec validation and the stores, for the agent
   slack/       the Slack app (and a fake Slack for development)
   web/         the web tool, billing, the read-only API (and a fake Stripe)
   alerts/      the alert engine
   review/      Review: GitHub app, code index, analyses (and a fake GitHub)
-  connector/   the connector for Claude Code (MCP)
+  connector/   the connector for coding agents (Python, MCP over stdio)
 packages/
   config/      the product name constant; environment and plans loading
   specs/       types and validators for panel, dashboard, alert, collector, manifest
   db/          schema, migrations, spec store
   promql/      reads a query's names; scopes a query to a workspace
   catalog/     name mapping, registration, search, sync, the convention checks
-  router/      model routing through OpenRouter: tiers, budget, escalation, call log
+  router/      model routing through OpenRouter (Python): tiers, budget, escalation, call log
+  pycommon/    shared Python helpers: the product name, durations, value formatting
+  agent-client/ the agent's HTTP client and types, for the TypeScript services
   memory/      per-workspace memory
   charts/      chart rendering (SVG, PNG) and the one-line reading
 site/          the product site (deployed to Vercel)

@@ -20,7 +20,21 @@ import { MANIFEST_FILENAME, PRODUCT_NAME } from '@app/config';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-const SKIP_DIRECTORIES = new Set(['node_modules', 'dist', '.git', 'docs', 'coverage']);
+const SKIP_DIRECTORIES = new Set([
+  'node_modules',
+  'dist',
+  '.git',
+  'docs',
+  'coverage',
+  // Python's installed packages and tool caches: generated, git-ignored, and full of absolute paths.
+  '.venv',
+  '__pycache__',
+  '.mypy_cache',
+  '.pytest_cache',
+  '.ruff_cache',
+  // Local Railway variables and secrets (git-ignored).
+  '.railway',
+]);
 const SKIP_PATHS = new Set(['infra/demo']);
 const ALLOWED_CONTENT = new Set(['packages/config/src/product.ts', 'README.md']);
 const BINARY = /\.(png|jpe?g|gif|webp|ico|pdf|woff2?|ttf|zip|gz)$/i;

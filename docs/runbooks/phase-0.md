@@ -18,7 +18,7 @@ Every other directory in `apps/` and `packages/` is a placeholder for a later ph
 
 ## Requirements
 
-Node 22.12 or newer, pnpm 12, Docker with Compose, GNU Make.
+Node 22.12 or newer, pnpm 12, uv (for the Python agent), Docker with Compose, GNU Make.
 
 ## Everyday commands
 

@@ -2,24 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{{NAME}}: ask your production a question</title>
     <meta
       name="description"
-      content="Ask for a chart, an alert or a data source in plain language, in Slack or the web. Get a tested query back. Review code with production metrics in view."
+      content="Charts, alerts and code review from plain language, for teams that build with coding agents. Every query is checked against your metrics and tested before you see it."
     />
     <meta property="og:title" content="{{NAME}}: ask your production a question" />
     <meta
       property="og:description"
       content="Plain-language charts and alerts for teams that build with coding agents, and a code reviewer that has read your metrics."
     />
-    <meta property="og:image" content="{{SITE_URL}}/shots/poster-future.png" />
+    <meta property="og:image" content="{{SITE_URL}}/shots/banner.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
@@ -27,24 +27,24 @@
   <body>
     <header class="wrap top">
       <a class="brand" href="/">
-        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
-          <rect width="32" height="32" rx="8" fill="currentColor" />
-          <path
-            d="M6 21 L11 15 L15 18 L20 9 L26 13"
-            fill="none"
-            stroke="#6d9bff"
-            stroke-width="2.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path d="M5 24 H27" stroke="#f0b53a" stroke-width="1.6" stroke-dasharray="2.5 2" />
-        </svg>
+        <span class="mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 32 32">
+            <path
+              d="M4 22 L11 11 L17 19 L22 12 L28 20"
+              fill="none"
+              stroke="#fff"
+              stroke-width="3.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
         {{NAME}}
       </a>
       <nav aria-label="Page">
-        <a href="#how">How it works</a>
-        <a href="#watch">Watch</a>
+        <a href="/" aria-current="page">Watch</a>
         <a href="/review">Review</a>
+        <a href="#how">How it works</a>
         <a href="#run">Run it</a>
         <a href="{{REPO_URL}}">GitHub</a>
       </nav>
@@ -52,109 +52,251 @@
 
     <main>
       <div class="hero">
-        <div class="wrap hero-grid">
-          <div>
-            <h1>Ask your production a question.</h1>
-            <p class="lede">
-              Type what you want to see, in Slack or the web. {{NAME}} finds the metric, writes the
-              query, tests it, and hands back a chart that shows its working.
-            </p>
-            <div class="actions">
-              <a class="btn primary" href="#run">Run it locally</a>
-              <a class="btn" href="{{REPO_URL}}">View on GitHub</a>
+        <div class="wrap">
+          <div class="hero-grid">
+            <div class="reveal">
+              <h1>
+                Ask your<br /><span class="grad">production</span><br />a question.<span
+                  class="caret"
+                  aria-hidden="true"
+                ></span>
+              </h1>
+              <p class="lede">
+                Charts, alerts and code review from plain language, for teams that build with coding
+                agents.
+              </p>
+              <div class="ask" role="img" aria-label="Example requests you can type">
+                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"
+                    fill="#8b7bff"
+                  />
+                </svg>
+                <span class="typed" id="typed">e.g. p95 latency of checkout, last hour</span>
+                <a class="go" href="#run" aria-label="Run it yourself">
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M7 17L17 7M9 7h8v8"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <div class="chips" aria-label="More things to ask">
+                <span class="chip"
+                  ><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M3 17l6-6 4 4 8-8"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    /></svg
+                  >Why did this alert fire?</span
+                >
+                <span class="chip"
+                  ><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M4 20V10M10 20V4M16 20v-7M22 20H2"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    /></svg
+                  >Busiest endpoints</span
+                >
+                <span class="chip"
+                  ><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="currentColor" /></svg
+                  >Error rate by endpoint</span
+                >
+              </div>
             </div>
+
+            <article class="glass insight reveal d1" aria-label="A real alert from the demo stack">
+              <div class="card-head">
+                <h2>
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"
+                      fill="#c9b8ff"
+                    />
+                  </svg>
+                  Alert drafted
+                </h2>
+                <a class="link" href="#watch">How alerts work</a>
+              </div>
+              <div class="insight-body">
+                <span class="badge-round warn" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24">
+                    <path
+                      d="M3 17l6-6 4 4 8-8M15 7h6v6"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <div>
+                  <strong>p95 latency peaked at 1,380 ms</strong>
+                  <p>Above the 1,200 ms threshold. The rule waits for a person to approve it.</p>
+                </div>
+              </div>
+              <svg class="spark" id="spark" viewBox="0 0 400 70" aria-hidden="true"></svg>
+              <div class="insight-foot">
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" fill="none" stroke="#8fa6ff" stroke-width="2" />
+                  <path
+                    d="M12 11v5M12 8v.5"
+                    stroke="#8fa6ff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Watching: <code>POST /checkout/pay</code>
+              </div>
+            </article>
           </div>
 
-          <figure class="thread" aria-label="An example conversation in Slack">
-            <div class="thread-head"><span>#ops thread</span><span>Watch</span></div>
-            <div class="msg">
-              <div class="avatar" aria-hidden="true">A</div>
-              <div>
-                <div class="who">Alice</div>
-                <p>p95 latency of checkout service in last 30 minutes</p>
-              </div>
-            </div>
-            <div class="msg">
-              <div class="avatar bot" aria-hidden="true">✦</div>
-              <div>
-                <div class="who">{{NAME}}</div>
-                <p>Which endpoint?</p>
-                <span class="answer">POST /checkout/pay, picked by Alice</span>
-              </div>
-            </div>
-            <div class="msg">
-              <div class="avatar bot" aria-hidden="true">✦</div>
-              <div>
-                <div class="who">{{NAME}}</div>
-                <p>Count failed requests too?</p>
-                <span class="answer">Yes, all requests</span>
-              </div>
-            </div>
-            <div class="msg">
-              <div class="avatar bot" aria-hidden="true">✦</div>
-              <div class="chart-wrap">
-                <div class="who">{{NAME}}</div>
-                <p>
-                  P95 latency was 690 ms most recently, between 541 ms and 1410 ms over the last 30
-                  minutes.
-                </p>
-                <img
-                  class="chart"
-                  src="/shots/slack-chart.png"
-                  width="1600"
-                  height="720"
-                  alt="Line chart of p95 latency for POST /checkout/pay over 30 minutes, between about 540 and 1410 ms"
-                />
-                <div class="assumed">
-                  Assumed: p95, all requests including failures, all regions combined
+          <div class="board">
+            <article class="glass chart-card reveal d2">
+              <div class="card-head">
+                <div class="tabs" aria-label="Measure">
+                  <span class="tab on">Latency</span>
                 </div>
-                <div class="chips" aria-hidden="true">
-                  <span>Save to dashboard</span><span>Alert me on this</span
-                  ><span>Open in web</span>
-                </div>
+                <span class="legend"><i></i>p95 · POST /checkout/pay</span>
               </div>
-            </div>
-          </figure>
+              <svg
+                class="chart"
+                id="chart"
+                viewBox="0 0 900 300"
+                role="img"
+                aria-label="p95 latency of POST /checkout/pay over one hour, between about 500 and 1,380 milliseconds, peaking near the end"
+              ></svg>
+              <p class="source">The last hour of the demo stack, 30-second steps. Real data.</p>
+            </article>
+
+            <article class="glass activity reveal d3" aria-label="What happened in the demo">
+              <div class="card-head">
+                <h3>From the demo</h3>
+                <a class="link" href="/review">Review</a>
+              </div>
+              <ul>
+                <li>
+                  <span class="badge-round bad" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <path d="M12 3l10 18H2z" fill="currentColor" />
+                      <path
+                        d="M12 10v5M12 17.5v.5"
+                        stroke="#1a0f1a"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </span>
+                  <div><b>Latency above threshold</b><span>POST /checkout/pay · 1.38 s</span></div>
+                </li>
+                <li>
+                  <span class="badge-round violet" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <circle
+                        cx="11"
+                        cy="11"
+                        r="6"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                      />
+                      <path
+                        d="M16 16l5 5"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Bottleneck found</b><span>GET /inventory/stock/history · p95 2.4 s</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="badge-round info" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <path d="M4 5h16v11H9l-5 4z" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Review comment on #4</b><span>user.id looks personal or secret</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="badge-round good" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <path
+                        d="M5 12l5 5 9-10"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Grounding check passed</b><span>45 of 45 queries, first attempt</span>
+                  </div>
+                </li>
+              </ul>
+            </article>
+          </div>
         </div>
       </div>
 
-      <section class="wrap products" aria-label="Two products">
-        <a class="product" href="#how">
-          <span class="p-name">Watch</span>
-          <span class="p-line">Charts and alerts from a sentence, in Slack and the web.</span>
-          <span class="p-for">For anyone who wants to know what production is doing</span>
-        </a>
-        <a class="product" href="/review">
-          <span class="p-name">Review</span>
-          <span class="p-line"
-            >A code reviewer that has read your metrics, on every pull request.</span
-          >
-          <span class="p-for">For engineers shipping changes</span>
-        </a>
+      <section class="wrap" aria-label="Two products" style="padding-block: 24px 0">
+        <div class="products">
+          <a class="glass product" href="#how">
+            <span class="p-name grad">Watch</span>
+            <span class="p-line">Charts and alerts from a sentence, in Slack and the web.</span>
+            <span class="p-for">For anyone who wants to know what production is doing</span>
+          </a>
+          <a class="glass product" href="/review">
+            <span class="p-name grad">Review</span>
+            <span class="p-line"
+              >A code reviewer that has read your metrics, on every pull request.</span
+            >
+            <span class="p-for">For engineers shipping changes</span>
+          </a>
+        </div>
       </section>
 
       <section id="how" class="wrap">
-        <h2>From a sentence to a chart you can trust</h2>
+        <h2 class="title">From a sentence to a chart you can trust</h2>
         <p class="intro">
           No query language, no dashboard building, and no guessing which metric is the right one.
           Every query is checked against what your services actually send before you see it.
         </p>
         <ol class="steps">
-          <li>
+          <li class="glass">
             <h3>Instrument with Claude Code</h3>
             <p>
               Run the skill in your repository. It adds OpenTelemetry metrics that follow one
               convention and writes a manifest of every endpoint and metric.
             </p>
           </li>
-          <li>
+          <li class="glass">
             <h3>Ask in plain language</h3>
             <p>
               Mention the bot in Slack or type in the web tool. It asks at most two short questions,
               then states every other assumption so you can change it.
             </p>
           </li>
-          <li>
+          <li class="glass">
             <h3>Keep it, watch it</h3>
             <p>
               Save the chart to a dashboard, or turn it into an alert. Rules stay inactive until a
@@ -175,7 +317,7 @@
             <ul>
               <li>“Split by endpoint, last 24 hours”</li>
               <li>Share a read-only link, or export to Grafana</li>
-              <li>Prometheus-compatible API and a Claude Code connector</li>
+              <li>Prometheus-compatible API and a connector for coding agents</li>
             </ul>
           </div>
           <img
@@ -187,7 +329,6 @@
             alt="The web dashboard: panels for checkout p95 latency and requests per second by endpoint, each with its query and assumptions"
           />
         </div>
-
         <div class="feature">
           <div class="copy">
             <h3>Alerts that wait for a yes</h3>
@@ -211,7 +352,6 @@
             alt="Alert rules for inventory and checkout, each pending approval with Approve, Edit and Discard buttons"
           />
         </div>
-
         <div class="feature" id="review">
           <div class="copy">
             <h3>A reviewer that has read your metrics</h3>
@@ -237,48 +377,46 @@
         </div>
       </section>
 
-      <section class="promises">
-        <div class="wrap">
-          <h2>Built to be checked, not trusted</h2>
-          <p class="intro" style="opacity: 0.78; color: inherit">
-            A model that guesses metric names produces charts that look right and are wrong. These
-            rules are enforced in code, not in a prompt.
-          </p>
-          <div class="promise-grid">
-            <div>
-              <h3>No invented metrics</h3>
-              <p>
-                Every name in a query must exist in your catalog. A query that mentions anything
-                else is refused before it runs.
-              </p>
-            </div>
-            <div>
-              <h3>Tested before you see it</h3>
-              <p>
-                Each query runs against your data first. If it returns nothing, it is rewritten or
-                you are told plainly that nothing matches.
-              </p>
-            </div>
-            <div>
-              <h3>Your data stays yours</h3>
-              <p>
-                Every query is rewritten to your workspace when it is parsed, and the metrics store
-                enforces it a second time.
-              </p>
-            </div>
-            <div>
-              <h3>One flat price</h3>
-              <p>
-                Priced per workspace, not per seat, with a free trial. Dashboards keep working even
-                if the model budget runs out.
-              </p>
-            </div>
+      <section class="wrap" style="padding-top: 0">
+        <h2 class="title">Built to be checked, <span class="grad">not trusted</span></h2>
+        <p class="intro">
+          A model that guesses metric names produces charts that look right and are wrong. These
+          rules are enforced in code, not in a prompt.
+        </p>
+        <div class="promise-grid">
+          <div class="glass">
+            <h3>No invented metrics</h3>
+            <p>
+              Every name in a query must exist in your catalog. A query that mentions anything else
+              is refused before it runs.
+            </p>
+          </div>
+          <div class="glass">
+            <h3>Tested before you see it</h3>
+            <p>
+              Each query runs against your data first. If it returns nothing, it is rewritten or you
+              are told plainly that nothing matches.
+            </p>
+          </div>
+          <div class="glass">
+            <h3>Your data stays yours</h3>
+            <p>
+              Every query is rewritten to your workspace when it is parsed, and the metrics store
+              enforces it a second time.
+            </p>
+          </div>
+          <div class="glass">
+            <h3>Spending has a hard limit</h3>
+            <p>
+              Model calls are capped per workspace. At the cap, building pauses and dashboards keep
+              working.
+            </p>
           </div>
         </div>
       </section>
 
-      <section id="run" class="wrap">
-        <h2>Run the whole thing on your laptop</h2>
+      <section id="run" class="wrap" style="padding-top: 0">
+        <h2 class="title">Run the whole thing on your laptop</h2>
         <p class="intro">
           One command starts the stores, every service, two instrumented demo services with traffic,
           and local stand-ins for Slack, GitHub and Stripe. No accounts or keys needed.
@@ -288,9 +426,13 @@
 <span class="p">$</span> pnpm ask "latency graph of checkout service in last 5 hr"
 <span class="c"># then open http://localhost:8094 and sign in with the local Slack</span></code></pre>
         <p class="small">
-          Needs Node 22, pnpm, Docker and Make. With no model key, a built-in stand-in answers
-          common requests, so nothing costs money. Add an OpenRouter key to use real models.
+          Needs Node 22.12 or newer, pnpm, uv, Docker and Make. With no model key, a built-in
+          stand-in answers common requests, so nothing costs money.
         </p>
+        <div class="actions">
+          <a class="btn primary" href="{{REPO_URL}}">View on GitHub</a>
+          <a class="btn" href="/review">See Review</a>
+        </div>
       </section>
     </main>
 
@@ -298,5 +440,29 @@
       <span>{{NAME}}: Watch and Review, for teams that build with coding agents.</span>
       <a href="{{REPO_URL}}">Source on GitHub</a>
     </footer>
+
+    <script src="/latency.js"></script>
+    <script src="/charts.js"></script>
+    <script>
+      (() => {
+        drawChart(document.getElementById('chart'), LATENCY);
+        drawSpark(document.getElementById('spark'), LATENCY, 1200);
+        // The ask bar cycles through real example requests.
+        const examples = [
+          'e.g. p95 latency of checkout, last hour',
+          'alert me if checkout p95 goes above 800 ms',
+          'error rate of checkout service by endpoint',
+          'monitor https://status.example.com every minute',
+        ];
+        const typed = document.getElementById('typed');
+        if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+          let n = 0;
+          setInterval(() => {
+            n = (n + 1) % examples.length;
+            typed.textContent = examples[n];
+          }, 3200);
+        }
+      })();
+    </script>
   </body>
 </html>

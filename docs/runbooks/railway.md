@@ -8,7 +8,8 @@ Two setups, from the same repository:
 | **Real** | The product for real teams: your own Slack app, GitHub App and Stripe account. No stand-ins, no demo services.                                  | A Railway account, and admin access to a Slack workspace, GitHub and Stripe |
 
 Railway runs each part as its own service from this repository. Every Probin service uses the
-one app image (`infra/docker/app.Dockerfile`); the `APP` variable picks which service it starts
+one app image (`infra/docker/app.Dockerfile`), except the agent, which is Python and has its own
+(`infra/docker/agent.Dockerfile`); the `APP` variable picks which TypeScript service starts
 (`infra/docker/start.sh`). The metrics store, the collector and the demo services have small
 images in `infra/railway/`. Each service is configured entirely by its variables, which
 `pnpm railway:env` writes for you.

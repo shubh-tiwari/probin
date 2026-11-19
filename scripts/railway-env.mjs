@@ -207,15 +207,27 @@ const services = {
     }),
     note: 'Public: services send metrics here. It also applies database migrations on start.',
   },
-  agent: {
-    vars: app('agent', {
-      ...common,
+  platform: {
+    vars: app('platform', {
+      DATABASE_URL: '${{Postgres.DATABASE_URL}}',
+      INTERNAL_API_TOKEN: s.INTERNAL_API_TOKEN,
       PLANS_FILE: plans,
+      DEFAULT_DASHBOARD_RANGE: '6h',
+      COLLECTOR_ALLOW_PRIVATE_NETWORKS: 'false',
+    }),
+    note: 'Private: catalog search, query analysis and the stores, for the agent.',
+  },
+  agent: {
+    // The agent is Python, with its own image.
+    vars: {
+      RAILWAY_DOCKERFILE_PATH: 'infra/docker/agent.Dockerfile',
+      PORT: '8080',
+      ...common,
+      PLATFORM_URL: internal('platform'),
       MODELS_FILE: 'config/models.example.yaml',
       ...(s.OPENROUTER_API_KEY ? { OPENROUTER_API_KEY: s.OPENROUTER_API_KEY } : {}),
-      COLLECTOR_ALLOW_PRIVATE_NETWORKS: 'false',
       DEFAULT_DASHBOARD_RANGE: '6h',
-    }),
+    },
   },
   slack: {
     public: true,

@@ -28,9 +28,6 @@
       "path": "../query-api"
     },
     {
-      "path": "../agent"
-    },
-    {
       "path": "../slack"
     }
   ]

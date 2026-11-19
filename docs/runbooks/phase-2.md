@@ -11,7 +11,7 @@ The [phase 0](phase-0.md) and [phase 1](phase-1.md) runbooks still apply.
 | Install flow, which is also sign-up: first install creates the workspace, its admin and its ingestion key | `apps/slack/src/install.ts`      |
 | Bot tokens stored encrypted (AES-256-GCM, key from `SECRETS_KEY`)                                         | `packages/config/src/secrets.ts` |
 | Server-side charts (SVG → PNG) and the one-line reading, shared with the web tool                         | `packages/charts/`               |
-| Agent requests kept in Postgres, so a thread can be answered later and after a restart                    | `apps/agent/src/requests.ts`     |
+| Agent requests kept in Postgres, so a thread can be answered later and after a restart                    | `apps/agent/src/agent/store.py`  |
 | Memory: "Skip questions next time" saves answers as `user_default` entries                                | `packages/memory/`               |
 | A fake Slack for development and tests                                                                    | `apps/slack/src/fake/server.ts`  |
 | Acceptance check                                                                                          | `scripts/verify-phase2.ts`       |

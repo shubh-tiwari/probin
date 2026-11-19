@@ -1,0 +1,69 @@
+# The Python workspace: the agent, the model router and the connector for
+# coding agents. Everything else is TypeScript (see package.json).
+#
+#   uv sync                 install every member and the dev tools
+#   uv run pytest           unit tests
+#   uv run ruff check .     lint (uv run ruff format . to format)
+#   uv run mypy             type-check
+
+[project]
+name = "app-python-workspace"
+version = "0.0.0"
+requires-python = ">=3.13"
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/pycommon", "packages/router", "apps/agent", "apps/connector"]
+
+[tool.uv.sources]
+app-pycommon = { workspace = true }
+app-router = { workspace = true }
+app-agent = { workspace = true }
+app-connector = { workspace = true }
+
+[dependency-groups]
+dev = [
+  "app-pycommon",
+  "app-router",
+  "app-agent",
+  "app-connector",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.25",
+  "respx>=0.22",
+  "ruff>=0.9",
+  "mypy>=1.15",
+  "types-pyyaml>=6.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["packages/pycommon/tests", "packages/router/tests", "apps/agent/tests", "apps/connector/tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "--import-mode=importlib"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["node_modules", "dist", "infra/demo"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["agent", "appcommon", "connector", "modelrouter"]
+
+[tool.ruff.lint.per-file-ignores]
+# The prompts are copied word for word from the TypeScript agent; they are not rewrapped.
+"apps/agent/src/agent/prompts.py" = ["E501"]
+"**/tests/**" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.mypy]
+strict = true
+python_version = "3.13"
+files = ["packages/pycommon/src", "packages/router/src", "apps/agent/src", "apps/connector/src"]
+plugins = ["pydantic.mypy"]

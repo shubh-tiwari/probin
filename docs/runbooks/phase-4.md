@@ -6,17 +6,17 @@ What phase 4 added and how to run it. The earlier runbooks still apply.
 
 | Piece                                                                                                                     | Where                                                                  |
 | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Alerts from a request (“alert me if … above 800 ms for 5 min”) or from a chart (“Alert me on this”), always pending first | `apps/agent/src/loop.ts`, `packages/db/src/alert-store.ts`             |
+| Alerts from a request (“alert me if … above 800 ms for 5 min”) or from a chart (“Alert me on this”), always pending first | `apps/agent/src/agent/loop.py`, `packages/db/src/alert-store.ts`       |
 | Pending rule cards with Approve, Edit, Discard, in Slack and on the web Alerts page                                       | `apps/slack/src/alert-messages.ts`, `apps/web/src/views/alerts.tsx`    |
 | The alert engine: evaluates approved rules only, every 15 s, through the Query API; posts firing and resolved messages    | `apps/alerts/`                                                         |
 | Why did this happen? (a labelled hypothesis with its charts), Snooze 1 hour, Acknowledge; incidents in memory             | `apps/agent/src/explain*.ts`, `apps/slack/src/conversation.ts`         |
 | Data sources: “monitor <URL> every minute”, a test fetch, a pending card, then a runner                                   | `apps/ingest/src/http-check.ts`, `apps/ingest/src/collector-runner.ts` |
 | Starter dashboard and two suggested (pending) alerts when a service first sends data                                      | `apps/ingest/src/starter.ts`                                           |
-| Change a chart: a follow-up in the Slack thread (S7), or “Change this panel” on the web (W6)                              | `seedRefinement` in `apps/agent/src/loop.ts`                           |
+| Change a chart: a follow-up in the Slack thread (S7), or “Change this panel” on the web (W6)                              | `seed_refinement` in `apps/agent/src/agent/loop.py`                    |
 | Share a dashboard by read-only link (W9); export it to Grafana (W12)                                                      | `apps/web/src/tokens.ts`, `apps/web/src/grafana.ts`                    |
 | Billing with Stripe (H5), usage (H6), retention, export and deletion on cancel (H7)                                       | `apps/web/src/billing.ts`, `apps/ingest/src/deletion.ts`               |
 | Read from a store the customer already runs (H8)                                                                          | `apps/query-api/src/workspace-stores.ts`, Settings page                |
-| Read-only API tokens; a Prometheus-compatible API for Grafana; the connector for Claude Code (K6)                         | `apps/web/src/app.tsx` (`/api`), `apps/connector/`                     |
+| Read-only API tokens; a Prometheus-compatible API for Grafana; the connector for Claude Code (K6)                         | `apps/web/src/app.tsx` (`/api`), `apps/connector/` (Python)            |
 | A fake Stripe for development                                                                                             | `apps/web/src/fake/stripe.ts`                                          |
 | Acceptance check                                                                                                          | `scripts/verify-phase4.ts`                                             |
 
@@ -33,7 +33,7 @@ What phase 4 added and how to run it. The earlier runbooks still apply.
 - `monitor http://demo-checkout:8080/checkout/summary every 30 seconds`, then Approve. The results appear as `http_check_up_ratio` and `http_check_duration_seconds` under the `checks` service.
 - Web: **Alerts**, **Data sources**, **Settings** (alert channel, API tokens, shared links, your own store), **Billing**.
 - Connector for Claude Code: make a token in Settings, then
-  `claude mcp add metrics -e METRICS_API_URL=http://localhost:8094 -e METRICS_API_TOKEN=<token> -- node --import tsx apps/connector/src/main.ts`
+  `claude mcp add metrics -e METRICS_API_URL=http://localhost:8094 -e METRICS_API_TOKEN=<token> -- uv run --project apps/connector connector`
 - Grafana: add a Prometheus data source with URL `<web>/api/prom` and header `Authorization: Bearer <token>`, then import an exported dashboard.
 
 ## Billing

@@ -40,7 +40,7 @@ import re
 
 # Emit the stable HTTP conventions: http.server.request.duration in seconds.
 # Must be set before any instrumentation package is imported.
-os.environ.setdefault("OTEL_SEMCONV_STABILITY_OPT_IN", "http")
+os.environ.setdefault('OTEL_SEMCONV_STABILITY_OPT_IN', 'http')
 
 from opentelemetry import metrics
 from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
@@ -51,9 +51,9 @@ from opentelemetry.sdk.metrics.view import DropAggregation, View
 # The web framework's instrumentation also emits these. They are not part of the
 # convention, so they are dropped: the service emits exactly what its manifest lists.
 _UNLISTED_HTTP_METRICS = (
-    "http.server.active_requests",
-    "http.server.request.body.size",
-    "http.server.response.body.size",
+    'http.server.active_requests',
+    'http.server.request.body.size',
+    'http.server.response.body.size',
 )
 
 
@@ -65,14 +65,14 @@ def _not_endpoints(app) -> str:
     a bare "docs" would also drop requests for /items/docs-1.
     """
     paths = [app.openapi_url, app.docs_url, app.redoc_url, app.swagger_ui_oauth2_redirect_url]
-    alternatives = "|".join(re.escape(path) for path in paths if path)
-    return f"^https?://[^/]+(?:{alternatives})$" if alternatives else ""
+    alternatives = '|'.join(re.escape(path) for path in paths if path)
+    return f'^https?://[^/]+(?:{alternatives})$' if alternatives else ''
 
 
 def setup_telemetry(app) -> None:
     """Send OpenTelemetry metrics for this service. Does nothing if no endpoint is configured."""
-    endpoint = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT")
-    use_console = os.environ.get("OTEL_METRICS_EXPORTER") == "console"
+    endpoint = os.environ.get('OTEL_EXPORTER_OTLP_ENDPOINT')
+    use_console = os.environ.get('OTEL_METRICS_EXPORTER') == 'console'
     if not endpoint and not use_console:
         return
 
@@ -80,7 +80,7 @@ def setup_telemetry(app) -> None:
     exporter = ConsoleMetricExporter() if use_console else OTLPMetricExporter()
     reader = PeriodicExportingMetricReader(
         exporter,
-        export_interval_millis=float(os.environ.get("OTEL_METRIC_EXPORT_INTERVAL") or 60000),
+        export_interval_millis=float(os.environ.get('OTEL_METRIC_EXPORT_INTERVAL') or 60000),
     )
     views = [
         View(instrument_name=name, aggregation=DropAggregation()) for name in _UNLISTED_HTTP_METRICS
@@ -99,7 +99,7 @@ from fastapi import FastAPI
 from telemetry import setup_telemetry
 
 app = FastAPI()
-setup_telemetry(app)   # before the first request; routes may be added after
+setup_telemetry(app)  # before the first request; routes may be added after
 ```
 
 To leave out health checks as well, add their paths to the pattern in the same anchored form, for example `^https?://[^/]+/(?:healthz|readyz)$`. Never pass a bare word such as `"healthz"` or `"docs"`: it is a regular expression matched anywhere in the URL.
@@ -111,7 +111,10 @@ Instrument outbound calls in the same function, after the meter provider is set.
 
   ```python
   from opentelemetry.instrumentation.requests import RequestsInstrumentor
-  RequestsInstrumentor().instrument(excluded_urls=re.escape(endpoint))   # endpoint is OTEL_EXPORTER_OTLP_ENDPOINT
+
+  RequestsInstrumentor().instrument(
+      excluded_urls=re.escape(endpoint)
+  )  # endpoint is OTEL_EXPORTER_OTLP_ENDPOINT
   ```
 
 Under a pre-forking server (gunicorn, uvicorn with `--workers`), call the set-up in each worker process after the fork, not in the parent. A reader thread started before the fork does not exist in the workers and nothing is exported.
@@ -126,41 +129,50 @@ Create each instrument once, at module level.
 import time
 from opentelemetry import metrics
 
-meter = metrics.get_meter("inventory")   # the meter is named after the service; metrics are not
+meter = metrics.get_meter('inventory')  # the meter is named after the service; metrics are not
+
 
 # Business metric: a gauge read on each export, with one bounded attribute.
 def _observe_stock(options):
-    for warehouse, units in current_stock().items():   # a fixed, small set of warehouses
-        yield metrics.Observation(units, {"warehouse": warehouse})
+    for warehouse, units in current_stock().items():  # a fixed, small set of warehouses
+        yield metrics.Observation(units, {'warehouse': warehouse})
+
 
 meter.create_observable_gauge(
-    "stock.level", callbacks=[_observe_stock], unit="{item}",
-    description="Units in stock per warehouse",
+    'stock.level',
+    callbacks=[_observe_stock],
+    unit='{item}',
+    description='Units in stock per warehouse',
 )
 
 # Business metric: a counter.
 reservations = meter.create_counter(
-    "stock.reservations", unit="{reservation}", description="Stock reservations made",
+    'stock.reservations',
+    unit='{reservation}',
+    description='Stock reservations made',
 )
-reservations.add(1, {"warehouse": warehouse})
+reservations.add(1, {'warehouse': warehouse})
 
 # Background job: a histogram in seconds, recorded on success and on failure.
 restock_duration = meter.create_histogram(
-    "stock.restock.duration", unit="s", description="Duration of the restock job",
+    'stock.restock.duration',
+    unit='s',
+    description='Duration of the restock job',
     explicit_bucket_boundaries_advisory=[0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 30, 60],
 )
 
+
 def run_restock():
     started = time.perf_counter()
-    result = "success"
+    result = 'success'
     try:
         restock()
     except Exception:
-        result = "failure"
+        result = 'failure'
         raise
     finally:
         restock_duration.record(
-            time.perf_counter() - started, {"job.name": "restock", "job.result": result}
+            time.perf_counter() - started, {'job.name': 'restock', 'job.result': result}
         )
 ```
 

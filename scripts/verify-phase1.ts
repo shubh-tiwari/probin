@@ -14,10 +14,10 @@
 import { execFile } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { promisify } from 'node:util';
-import { checkGrounding } from '@app/agent';
-import { createAgentClient } from '@app/agent/client';
+import { createAgentClient } from '@app/agent-client';
 import { listEndpoints, listMetrics } from '@app/catalog';
 import { loadEnv } from '@app/config';
+import { extractNames } from '@app/promql';
 import { connect, createWorkspace, schema } from '@app/db';
 import { generateIngestionKey, hashIngestionKey } from '@app/ingest';
 import { QueryApiError, createQueryApiClient } from '@app/query-api/client';
@@ -31,6 +31,16 @@ import {
   storeQuery,
 } from './lib/checks.js';
 import { checkConformance, demoManifests } from './lib/conformance.js';
+
+/** The agent's grounding rule: every metric and label name came from the catalog search. */
+function grounded(query: string, allowed: { metrics: string[]; labels: string[] }): boolean {
+  const names = extractNames(query);
+  return (
+    names.metrics.every((name) => allowed.metrics.includes(name)) &&
+    names.labels.every((name) => allowed.labels.includes(name)) &&
+    names.unnamedSelectors.length === 0
+  );
+}
 
 const env = loadEnv([
   'DATABASE_URL',
@@ -294,10 +304,7 @@ try {
     });
     assert(reply.trace.questionsAsked.length <= 2, 'more than two questions');
     const { panel } = reply.output;
-    assert(
-      checkGrounding(panel.query, reply.trace.allowed).ok,
-      'the draft uses a name outside the catalog',
-    );
+    assert(grounded(panel.query, reply.trace.allowed), 'the draft uses a name outside the catalog');
     assert(panel.range === '5h' && panel.request.includes('checkout'), 'range or request not kept');
     const calls = await db
       .select({ task: schema.modelCalls.taskType })

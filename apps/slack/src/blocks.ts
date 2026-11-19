@@ -1,4 +1,4 @@
-import type { Question } from '@app/agent/client';
+import type { Question } from '@app/agent-client';
 import type { PanelSpec } from '@app/specs';
 
 /**

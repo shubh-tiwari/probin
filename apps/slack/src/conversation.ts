@@ -1,4 +1,4 @@
-import { AgentApiError, type AgentClient, type AgentReply } from '@app/agent/client';
+import { AgentApiError, type AgentClient, type AgentReply } from '@app/agent-client';
 import { readChart, renderSvg, svgToPng } from '@app/charts';
 import type { QueryApiClient } from '@app/query-api/client';
 import type { AlertRuleSpec, CollectorSpec, PanelSpec } from '@app/specs';

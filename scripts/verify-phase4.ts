@@ -12,9 +12,8 @@
  */
 import { randomUUID } from 'node:crypto';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import { createAgentClient } from '@app/agent/client';
-import { createConnector, createReadApi } from '@app/connector';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { createAgentClient } from '@app/agent-client';
 import { loadEnv } from '@app/config';
 import { connect, schema } from '@app/db';
 import { createQueryApiClient } from '@app/query-api/client';
@@ -418,10 +417,19 @@ try {
   });
 
   await step('the connector for Claude Code reads metrics with an API token (K6)', async () => {
-    const [a, b] = InMemoryTransport.createLinkedPair();
-    await createConnector(createReadApi({ url: env.WEB_URL, token: apiToken })).connect(a);
+    // Started exactly as a coding agent starts it: a process speaking MCP over stdio.
+    const transport = new StdioClientTransport({
+      command: 'uv',
+      args: ['run', '--project', 'apps/connector', 'connector'],
+      env: {
+        ...(process.env as Record<string, string>),
+        METRICS_API_URL: env.WEB_URL,
+        METRICS_API_TOKEN: apiToken,
+      },
+      stderr: 'ignore',
+    });
     const client = new Client({ name: 'verify', version: '1' });
-    await client.connect(b);
+    await client.connect(transport);
     const services = JSON.parse(
       (
         (await client.callTool({ name: 'list_services', arguments: {} })).content as {
@@ -443,7 +451,8 @@ try {
       },
     });
     assert(!result.isError, 'the query failed');
-    return `services: ${services.services.join(', ')}`;
+    await client.close();
+    return `services: ${services.services.join(', ')} (from the stdio connector)`;
   });
 
   // ---------------------------------------------------------------- billing, deletion, own store

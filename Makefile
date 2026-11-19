@@ -36,18 +36,25 @@ verify: .env node_modules ## Check the running stack end to end (phase acceptanc
 	pnpm test:integration
 	pnpm evals:query
 
-lint: node_modules ## Lint, check formatting and check the product name is not hard-coded
+lint: node_modules .venv ## Lint, check formatting and check the product name is not hard-coded
 	pnpm lint
 	pnpm format:check
+	pnpm py:lint
 	pnpm check:product-name
 
-typecheck: node_modules ## Type-check every package
+typecheck: node_modules .venv ## Type-check every package, TypeScript and Python
 	pnpm typecheck
+	pnpm py:typecheck
 
-test: node_modules ## Run unit tests (no containers needed)
+test: node_modules .venv ## Run unit tests, TypeScript and Python (no containers needed)
 	pnpm test
+	pnpm py:test
 
 check: lint typecheck test ## Everything continuous integration runs without containers
+
+.venv: pyproject.toml uv.lock
+	uv sync --frozen
+	@touch .venv
 
 .env:
 	cp .env.example .env

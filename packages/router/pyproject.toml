@@ -1,0 +1,16 @@
+[project]
+name = "app-router"
+version = "0.0.0"
+description = "Model routing for the agent: task types to tiers, budget cap, escalation, call log."
+requires-python = ">=3.13"
+dependencies = ["app-pycommon", "httpx>=0.28", "pydantic>=2.10", "pyyaml>=6.0", "psycopg[binary,pool]>=3.2"]
+
+[build-system]
+requires = ["uv_build>=0.11,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "modelrouter"
+
+[tool.uv.sources]
+app-pycommon = { workspace = true }

@@ -1,0 +1,179 @@
+<!doctype html>
+<!--
+  The README banner and the link-preview image, in the site's design language.
+  Rendered at 1280x640, scale 2, into docs/screenshots/banner.png. The chart is
+  real data: an hour of checkout POST /checkout/pay p95 latency from the demo stack.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{NAME}} banner</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body {
+        width: 1280px;
+        height: 640px;
+        overflow: hidden;
+        position: relative;
+        background:
+          radial-gradient(700px 520px at 88% 10%, rgba(139, 92, 246, 0.35), transparent 62%),
+          radial-gradient(900px 400px at 20% 115%, rgba(79, 125, 255, 0.35), transparent 65%),
+          var(--night);
+      }
+      .orb {
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        right: -110px;
+        top: -150px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 35% 35%,
+          rgba(124, 92, 255, 0.55),
+          rgba(40, 40, 140, 0.12) 60%,
+          transparent 72%
+        );
+      }
+      .brand {
+        position: absolute;
+        left: 56px;
+        top: 44px;
+      }
+      h1 {
+        position: absolute;
+        left: 56px;
+        top: 118px;
+        margin: 0;
+        font-size: 74px;
+      }
+      .lede {
+        position: absolute;
+        left: 58px;
+        top: 392px;
+        width: 560px;
+        font-size: 19px;
+        margin: 0;
+      }
+      .ask {
+        position: absolute;
+        left: 56px;
+        top: 484px;
+        width: 500px;
+      }
+      .ask .typed {
+        font-size: 16px;
+      }
+      .insight {
+        position: absolute;
+        right: 48px;
+        top: 52px;
+        width: 560px;
+        padding: 20px 22px;
+      }
+      .insight .spark {
+        height: 54px;
+      }
+      .chart-card {
+        position: absolute;
+        right: 48px;
+        top: 300px;
+        width: 560px;
+        padding: 16px 18px 10px;
+      }
+      .chart text {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb"></div>
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 32 32">
+          <path
+            d="M4 22 L11 11 L17 19 L22 12 L28 20"
+            fill="none"
+            stroke="#fff"
+            stroke-width="3.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      {{NAME}}
+    </div>
+    <h1>
+      Ask your<br /><span class="grad">production</span><br />a question.<span class="caret"></span>
+    </h1>
+    <p class="lede">
+      Charts, alerts and code review from plain language, for teams that build with coding agents.
+    </p>
+    <div class="ask">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z" fill="#8b7bff" />
+      </svg>
+      <span class="typed">e.g. p95 latency of checkout, last hour</span>
+      <span class="go">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M7 17L17 7M9 7h8v8"
+            fill="none"
+            stroke="#fff"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+
+    <div class="glass insight">
+      <div class="card-head" style="margin-bottom: 12px">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z" fill="#c9b8ff" />
+          </svg>
+          Alert drafted, waiting for approval
+        </h2>
+      </div>
+      <div class="insight-body">
+        <span class="badge-round warn" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24">
+            <path
+              d="M3 17l6-6 4 4 8-8M15 7h6v6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <div>
+          <strong>p95 latency peaked at 1,380 ms</strong>
+          <p>POST /checkout/pay, above the 1,200 ms threshold</p>
+        </div>
+      </div>
+      <svg class="spark" id="spark" viewBox="0 0 400 70" preserveAspectRatio="none"></svg>
+    </div>
+
+    <div class="glass chart-card">
+      <div class="card-head" style="margin-bottom: 0">
+        <div class="tabs"><span class="tab on">Latency</span></div>
+        <span class="legend"><i></i>p95 · last hour · real data</span>
+      </div>
+      <svg class="chart" id="chart" viewBox="0 0 900 300"></svg>
+    </div>
+
+    <script src="/latency.js"></script>
+    <script src="/charts.js"></script>
+    <script>
+      drawChart(document.getElementById('chart'), LATENCY);
+      drawSpark(document.getElementById('spark'), LATENCY, 1200);
+    </script>
+  </body>
+</html>

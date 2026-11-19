@@ -194,51 +194,6 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@22.20.5)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))
 
-  apps/agent:
-    dependencies:
-      '@app/catalog':
-        specifier: workspace:*
-        version: link:../../packages/catalog
-      '@app/charts':
-        specifier: workspace:*
-        version: link:../../packages/charts
-      '@app/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@app/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@app/ingest':
-        specifier: workspace:*
-        version: link:../ingest
-      '@app/memory':
-        specifier: workspace:*
-        version: link:../../packages/memory
-      '@app/promql':
-        specifier: workspace:*
-        version: link:../../packages/promql
-      '@app/query-api':
-        specifier: workspace:*
-        version: link:../query-api
-      '@app/router':
-        specifier: workspace:*
-        version: link:../../packages/router
-      '@app/specs':
-        specifier: workspace:*
-        version: link:../../packages/specs
-      '@hono/node-server':
-        specifier: ^2.1.9
-        version: 2.1.9(hono@4.13.19)
-      drizzle-orm:
-        specifier: ^0.45.4
-        version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(pg@8.23.1)
-      hono:
-        specifier: ^4.13.19
-        version: 4.13.19
-      zod:
-        specifier: ^4.6.7
-        version: 4.6.7
-
   apps/alerts:
     dependencies:
       '@app/charts':
@@ -275,18 +230,6 @@ importers:
         specifier: ^4.13.19
         version: 4.13.19
 
-  apps/connector:
-    dependencies:
-      '@app/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@modelcontextprotocol/sdk':
-        specifier: 1.32.2
-        version: 1.32.2(zod@4.6.7)
-      zod:
-        specifier: ^4.6.7
-        version: 4.6.7
-
   apps/ingest:
     dependencies:
       '@app/catalog':
@@ -317,6 +260,39 @@ importers:
         specifier: ^12.38.2
         version: 12.38.2(@opentelemetry/api@1.10.0)
 
+  apps/platform:
+    dependencies:
+      '@app/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
+      '@app/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@app/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@app/ingest':
+        specifier: workspace:*
+        version: link:../ingest
+      '@app/memory':
+        specifier: workspace:*
+        version: link:../../packages/memory
+      '@app/promql':
+        specifier: workspace:*
+        version: link:../../packages/promql
+      '@app/specs':
+        specifier: workspace:*
+        version: link:../../packages/specs
+      '@hono/node-server':
+        specifier: ^2.1.9
+        version: 2.1.9(hono@4.13.19)
+      drizzle-orm:
+        specifier: ^0.45.4
+        version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(pg@8.23.1)
+      hono:
+        specifier: ^4.13.19
+        version: 4.13.19
+
   apps/query-api:
     dependencies:
       '@app/config':
@@ -340,9 +316,6 @@ importers:
 
   apps/review:
     dependencies:
-      '@app/agent':
-        specifier: workspace:*
-        version: link:../agent
       '@app/catalog':
         specifier: workspace:*
         version: link:../../packages/catalog
@@ -388,9 +361,9 @@ importers:
 
   apps/slack:
     dependencies:
-      '@app/agent':
+      '@app/agent-client':
         specifier: workspace:*
-        version: link:../agent
+        version: link:../../packages/agent-client
       '@app/charts':
         specifier: workspace:*
         version: link:../../packages/charts
@@ -427,9 +400,9 @@ importers:
 
   apps/web:
     dependencies:
-      '@app/agent':
+      '@app/agent-client':
         specifier: workspace:*
-        version: link:../agent
+        version: link:../../packages/agent-client
       '@app/catalog':
         specifier: workspace:*
         version: link:../../packages/catalog
@@ -476,29 +449,17 @@ importers:
         specifier: 23.1.0
         version: 23.1.0(@types/node@22.20.5)
 
-  evals:
+  packages/agent-client:
     dependencies:
-      '@app/agent':
-        specifier: workspace:*
-        version: link:../apps/agent
       '@app/catalog':
         specifier: workspace:*
-        version: link:../packages/catalog
+        version: link:../catalog
       '@app/config':
         specifier: workspace:*
-        version: link:../packages/config
-      '@app/db':
+        version: link:../config
+      '@app/specs':
         specifier: workspace:*
-        version: link:../packages/db
-      '@app/query-api':
-        specifier: workspace:*
-        version: link:../apps/query-api
-      '@app/router':
-        specifier: workspace:*
-        version: link:../packages/router
-      yaml:
-        specifier: ^2.9.1
-        version: 2.9.1
+        version: link:../specs
       zod:
         specifier: ^4.6.7
         version: 4.6.7
@@ -579,24 +540,6 @@ importers:
         specifier: ^0.316.0
         version: 0.316.0(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)
 
-  packages/router:
-    dependencies:
-      '@app/config':
-        specifier: workspace:*
-        version: link:../config
-      '@app/db':
-        specifier: workspace:*
-        version: link:../db
-      drizzle-orm:
-        specifier: ^0.45.4
-        version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(pg@8.23.1)
-      yaml:
-        specifier: ^2.9.1
-        version: 2.9.1
-      zod:
-        specifier: ^4.6.7
-        version: 4.6.7
-
   packages/specs:
     dependencies:
       yaml:
@@ -608,9 +551,9 @@ importers:
 
   scripts:
     dependencies:
-      '@app/agent':
+      '@app/agent-client':
         specifier: workspace:*
-        version: link:../apps/agent
+        version: link:../packages/agent-client
       '@app/catalog':
         specifier: workspace:*
         version: link:../packages/catalog
@@ -620,9 +563,6 @@ importers:
       '@app/config':
         specifier: workspace:*
         version: link:../packages/config
-      '@app/connector':
-        specifier: workspace:*
-        version: link:../apps/connector
       '@app/db':
         specifier: workspace:*
         version: link:../packages/db
@@ -632,6 +572,9 @@ importers:
       '@app/memory':
         specifier: workspace:*
         version: link:../packages/memory
+      '@app/promql':
+        specifier: workspace:*
+        version: link:../packages/promql
       '@app/query-api':
         specifier: workspace:*
         version: link:../apps/query-api

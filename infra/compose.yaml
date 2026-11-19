@@ -117,21 +117,42 @@ services:
         condition: service_healthy
     healthcheck: *app-health
 
+  # Catalog search, query analysis, spec validation and the spec, alert,
+  # collector and memory stores, over HTTP for the agent. Private.
+  platform:
+    <<: *app
+    command: ['node', '--import', 'tsx', 'apps/platform/src/main.ts']
+    environment:
+      PORT: '8080'
+      DATABASE_URL: postgres://app:app@postgres:5432/app
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+      PLANS_FILE: ${PLANS_FILE:-config/plans.example.yaml}
+      DEFAULT_DASHBOARD_RANGE: ${DEFAULT_DASHBOARD_RANGE:-6h}
+      # Development only: lets collectors check the demo services on this private network.
+      COLLECTOR_ALLOW_PRIVATE_NETWORKS: 'true'
+    ports:
+      - '${PLATFORM_PORT:-8098}:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck: *app-health
+
   # The one agent behind Slack, the web tool and Review. The only service that
   # calls a model, and only when someone builds or asks.
   agent:
-    <<: *app
-    command: ['node', '--import', 'tsx', 'apps/agent/src/main.ts']
+    build:
+      context: ..
+      dockerfile: infra/docker/agent.Dockerfile
+    image: app-dev-agent
+    init: true
     environment:
       PORT: '8080'
       DATABASE_URL: postgres://app:app@postgres:5432/app
       QUERY_API_URL: http://query-api:8080
+      PLATFORM_URL: http://platform:8080
       INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
-      PLANS_FILE: ${PLANS_FILE:-config/plans.example.yaml}
       MODELS_FILE: ${MODELS_FILE:-config/models.example.yaml}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
-      # Development only: lets collectors check the demo services on this private network.
-      COLLECTOR_ALLOW_PRIVATE_NETWORKS: 'true'
       DEFAULT_DASHBOARD_RANGE: ${DEFAULT_DASHBOARD_RANGE:-6h}
     ports:
       - '${AGENT_PORT:-8091}:8080'
@@ -140,7 +161,17 @@ services:
         condition: service_healthy
       query-api:
         condition: service_healthy
-    healthcheck: *app-health
+      platform:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2)"
+      interval: 2s
+      timeout: 3s
+      retries: 30
 
   # The Slack app. Talks to the fake Slack below in development.
   slack:

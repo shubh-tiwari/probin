@@ -1,0 +1,1410 @@
+{
+  "format": [
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 0,
+      "text": "0s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 1,
+      "text": "1s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 100,
+      "text": "100s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 10000,
+      "text": "10ks"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3ks"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000ks"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1Ms"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5Ms"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1Bs"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21Bs"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3ks"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": "NaN",
+      "text": "–s"
+    },
+    {
+      "unit": "s",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "–s"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 0,
+      "text": "0 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 0.00012345,
+      "text": "0.123 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 0.012345,
+      "text": "12.3 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 0.5,
+      "text": "500 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 1,
+      "text": "1000 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 1.23456,
+      "text": "1235 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 12.3456,
+      "text": "12.3k ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 99.95,
+      "text": "100k ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 100,
+      "text": "100k ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 123.456,
+      "text": "123k ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 999.5,
+      "text": "1000k ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 9999,
+      "text": "10M ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 10000,
+      "text": "10M ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 12345.6,
+      "text": "12.3M ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 999999,
+      "text": "1000M ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 1000000,
+      "text": "1B ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 2500000,
+      "text": "2.5B ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 1000000000,
+      "text": "1000B ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": 3210000000,
+      "text": "3210B ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": -0.5,
+      "text": "-500 ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": -12345,
+      "text": "-12.3M ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": "NaN",
+      "text": "– ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "ms",
+      "value": "Infinity",
+      "text": "– ms"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 0,
+      "text": "0"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 1,
+      "text": "1"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 100,
+      "text": "100"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 10000,
+      "text": "10k"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3k"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000k"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1M"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5M"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1B"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21B"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3k"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": "NaN",
+      "text": "–"
+    },
+    {
+      "unit": "1",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "–"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 0,
+      "text": "0%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 0.00012345,
+      "text": "0.0123%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 0.012345,
+      "text": "1.23%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 0.5,
+      "text": "50%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 1,
+      "text": "100%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 1.23456,
+      "text": "123%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 12.3456,
+      "text": "1235%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 99.95,
+      "text": "9995%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 100,
+      "text": "10k%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 123.456,
+      "text": "12.3k%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 999.5,
+      "text": "100k%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 9999,
+      "text": "1000k%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 10000,
+      "text": "1M%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 12345.6,
+      "text": "1.23M%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 999999,
+      "text": "100M%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 1000000,
+      "text": "100M%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 2500000,
+      "text": "250M%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 1000000000,
+      "text": "100B%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": 3210000000,
+      "text": "321B%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": -0.5,
+      "text": "-50%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": -12345,
+      "text": "-1.23M%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": "NaN",
+      "text": "–%"
+    },
+    {
+      "unit": "1",
+      "wanted": "%",
+      "value": "Infinity",
+      "text": "–%"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 0,
+      "text": "0 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 1,
+      "text": "1 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 100,
+      "text": "100 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 10000,
+      "text": "10k B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3k B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000k B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1M B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5M B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1B B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21B B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5 B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3k B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": "NaN",
+      "text": "– B"
+    },
+    {
+      "unit": "By",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "– B"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 0,
+      "text": "0 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 1,
+      "text": "1 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 100,
+      "text": "100 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 10000,
+      "text": "10k request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3k request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000k request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1M request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5M request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1B request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21B request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5 request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3k request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": "NaN",
+      "text": "– request"
+    },
+    {
+      "unit": "{request}",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "– request"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 0,
+      "text": "0 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 1,
+      "text": "1 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 100,
+      "text": "100 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 10000,
+      "text": "10k order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3k order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000k order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1M order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5M order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1B order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21B order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5 order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3k order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": "NaN",
+      "text": "– order"
+    },
+    {
+      "unit": "{order}",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "– order"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 0,
+      "text": "0 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 1,
+      "text": "1 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 100,
+      "text": "100 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 10000,
+      "text": "10k req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3k req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000k req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1M req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5M req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1B req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21B req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5 req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3k req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": "NaN",
+      "text": "– req/s"
+    },
+    {
+      "unit": "req/s",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "– req/s"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 0,
+      "text": "0"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 0.00012345,
+      "text": "0.000123"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 0.012345,
+      "text": "0.0123"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 0.5,
+      "text": "0.5"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 1,
+      "text": "1"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 1.23456,
+      "text": "1.23"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 12.3456,
+      "text": "12.3"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 99.95,
+      "text": "100"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 100,
+      "text": "100"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 123.456,
+      "text": "123"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 999.5,
+      "text": "1000"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 9999,
+      "text": "9999"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 10000,
+      "text": "10k"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 12345.6,
+      "text": "12.3k"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 999999,
+      "text": "1000k"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 1000000,
+      "text": "1M"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 2500000,
+      "text": "2.5M"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 1000000000,
+      "text": "1B"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": 3210000000,
+      "text": "3.21B"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": -0.5,
+      "text": "-0.5"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": -12345,
+      "text": "-12.3k"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": "NaN",
+      "text": "–"
+    },
+    {
+      "unit": "",
+      "wanted": null,
+      "value": "Infinity",
+      "text": "–"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 0,
+      "text": "0s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 0.00012345,
+      "text": "0.000123s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 0.012345,
+      "text": "0.0123s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 0.5,
+      "text": "0.5s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 1,
+      "text": "1s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 1.23456,
+      "text": "1.23s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 12.3456,
+      "text": "12.3s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 99.95,
+      "text": "100s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 100,
+      "text": "100s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 123.456,
+      "text": "123s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 999.5,
+      "text": "1000s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 9999,
+      "text": "9999s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 10000,
+      "text": "10ks"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 12345.6,
+      "text": "12.3ks"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 999999,
+      "text": "1000ks"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 1000000,
+      "text": "1Ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 2500000,
+      "text": "2.5Ms"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 1000000000,
+      "text": "1Bs"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": 3210000000,
+      "text": "3.21Bs"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": -0.5,
+      "text": "-0.5s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": -12345,
+      "text": "-12.3ks"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": "NaN",
+      "text": "–s"
+    },
+    {
+      "unit": "s",
+      "wanted": "h",
+      "value": "Infinity",
+      "text": "–s"
+    }
+  ],
+  "seriesNames": [
+    {
+      "labels": {},
+      "name": "all"
+    },
+    {
+      "labels": {
+        "__name__": "x"
+      },
+      "name": "all"
+    },
+    {
+      "labels": {
+        "http_route": "/a",
+        "http_request_method": "GET"
+      },
+      "name": "/a · GET"
+    },
+    {
+      "labels": {
+        "__name__": "x",
+        "le": "0.5"
+      },
+      "name": "0.5"
+    }
+  ]
+}

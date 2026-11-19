@@ -24,9 +24,6 @@
       "path": "../../packages/memory"
     },
     {
-      "path": "../agent"
-    },
-    {
       "path": "../query-api"
     },
     {
@@ -40,6 +37,9 @@
     },
     {
       "path": "../review"
+    },
+    {
+      "path": "../../packages/agent-client"
     }
   ]
 }

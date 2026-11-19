@@ -19,13 +19,13 @@
       "path": "../../packages/specs"
     },
     {
-      "path": "../agent"
-    },
-    {
       "path": "../query-api"
     },
     {
       "path": "../ingest"
+    },
+    {
+      "path": "../../packages/agent-client"
     }
   ]
 }

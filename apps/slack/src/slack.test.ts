@@ -1,4 +1,4 @@
-import type { AgentClient, AgentReply, Question } from '@app/agent/client';
+import type { AgentClient, AgentReply, Question } from '@app/agent-client';
 import type { QueryApiClient } from '@app/query-api/client';
 import type { PanelSpec } from '@app/specs';
 import { describe, expect, it, vi } from 'vitest';

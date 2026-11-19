@@ -11,7 +11,7 @@ What phase 3 added and how to run it. The earlier runbooks still apply.
 | Time range picker and auto-refresh, with no model call                                       | `apps/web/src/app.tsx` (`/dashboards/:id/panels/:panel/chart`) |
 | Query shown under every panel and editable by hand, saved only after a dry run               | same                                                           |
 | Memory page: list, add a team decision, edit, delete                                         | `apps/web/src/views/memory.tsx`                                |
-| Resolved-request cache: the same words reuse the tested query with no model call             | `apps/agent/src/loop.ts`, table `resolved_requests`            |
+| Resolved-request cache: the same words reuse the tested query with no model call             | `apps/agent/src/agent/loop.py`, table `resolved_requests`      |
 | Acceptance check                                                                             | `scripts/verify-phase3.ts`                                     |
 
 ## Using it

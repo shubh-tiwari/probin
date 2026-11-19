@@ -14,13 +14,14 @@
 set -eu
 
 case "${APP:-}" in
-  query-api | ingest | agent | slack | alerts | web | review)
+  query-api | ingest | platform | slack | alerts | web | review)
     entry="apps/$APP/src/main.ts" ;;
   slack-fake) entry=apps/slack/src/fake/server.ts ;;
   stripe-fake) entry=apps/web/src/fake/stripe.ts ;;
   github-fake) entry=apps/review/src/fake/github.ts ;;
   *)
-    echo "APP must name a service: query-api, ingest, agent, slack, alerts, web, review," >&2
+    echo "APP must name a service: query-api, ingest, platform, slack, alerts, web, review," >&2
+    echo "(the agent has its own image: infra/docker/agent.Dockerfile)" >&2
     echo "slack-fake, stripe-fake or github-fake. Got: '${APP:-}'" >&2
     exit 64 ;;
 esac

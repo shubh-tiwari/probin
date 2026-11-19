@@ -1,0 +1,66 @@
+[
+  {
+    "input": "1ms",
+    "seconds": 0.001
+  },
+  {
+    "input": "30s",
+    "seconds": 30
+  },
+  {
+    "input": "5m",
+    "seconds": 300
+  },
+  {
+    "input": "5h",
+    "seconds": 18000
+  },
+  {
+    "input": "7d",
+    "seconds": 604800
+  },
+  {
+    "input": "2w",
+    "seconds": 1209600
+  },
+  {
+    "input": "1y",
+    "seconds": 31536000
+  },
+  {
+    "input": "90m",
+    "seconds": 5400
+  },
+  {
+    "input": "0s",
+    "seconds": null
+  },
+  {
+    "input": "1h30m",
+    "seconds": null
+  },
+  {
+    "input": "5",
+    "seconds": null
+  },
+  {
+    "input": "m",
+    "seconds": null
+  },
+  {
+    "input": "05m",
+    "seconds": null
+  },
+  {
+    "input": "-5m",
+    "seconds": null
+  },
+  {
+    "input": "5M",
+    "seconds": null
+  },
+  {
+    "input": " 5m",
+    "seconds": null
+  }
+]

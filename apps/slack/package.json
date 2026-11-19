@@ -7,7 +7,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@app/agent": "workspace:*",
+    "@app/agent-client": "workspace:*",
     "@app/charts": "workspace:*",
     "@app/config": "workspace:*",
     "@app/db": "workspace:*",

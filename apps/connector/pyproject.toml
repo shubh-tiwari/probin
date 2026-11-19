@@ -1,0 +1,19 @@
+[project]
+name = "app-connector"
+version = "0.0.0"
+description = "The connector for coding agents (MCP over stdio): read-only access to a workspace's metrics."
+requires-python = ">=3.13"
+dependencies = ["app-pycommon", "mcp>=1.6", "httpx>=0.28"]
+
+[project.scripts]
+connector = "connector.main:run"
+
+[build-system]
+requires = ["uv_build>=0.11,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "connector"
+
+[tool.uv.sources]
+app-pycommon = { workspace = true }

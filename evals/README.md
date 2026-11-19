@@ -2,7 +2,7 @@
 
 ## Query test set (`evals/query/`)
 
-`cases.yaml` holds the requests; `run.ts` runs them. Each request goes through the
+`cases.yaml` holds the requests; `apps/agent/src/agent/evals.py` runs them (`pnpm evals:query` calls it through uv). Each request goes through the
 real agent loop against the running stack: the dev workspace's catalog, and the
 Query API for dry runs. Nothing is saved.
 

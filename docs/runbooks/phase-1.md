@@ -12,7 +12,7 @@ Read the [phase 0 runbook](phase-0.md) first; this one adds to it.
 | Catalog: name mapping, registration, search, sync, convention checks             | `packages/catalog/`                              |
 | Query API: time limit, line cap, workspace scoping, result cache                 | `apps/query-api/`                                |
 | PromQL reading and scoping                                                       | `packages/promql/`                               |
-| Model router: task-type table, budget cap, escalation, call log                  | `packages/router/`, `config/models.example.yaml` |
+| Model router: task-type table, budget cap, escalation, call log (Python)         | `packages/router/`, `config/models.example.yaml` |
 | Agent: tools with their guards, the "get a metric" loop, prompts, stand-in model | `apps/agent/`                                    |
 | Spec store (append-only versions)                                                | `packages/db/src/spec-store.ts`                  |
 | The skill for Claude Code                                                        | `skill/src/`, built with `pnpm skill:build`      |

@@ -25,9 +25,6 @@
       "path": "../packages/specs"
     },
     {
-      "path": "../apps/agent"
-    },
-    {
       "path": "../apps/slack"
     },
     {
@@ -37,7 +34,10 @@
       "path": "../packages/charts"
     },
     {
-      "path": "../apps/connector"
+      "path": "../packages/agent-client"
+    },
+    {
+      "path": "../packages/promql"
     }
   ]
 }

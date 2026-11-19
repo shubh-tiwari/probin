@@ -1,5 +1,5 @@
 /** @jsxRuntime automatic @jsxImportSource hono/jsx */
-import type { AgentReply } from '@app/agent/client';
+import type { AgentReply } from '@app/agent-client';
 import { PRODUCT_NAME } from '@app/config';
 import type { PanelSpec } from '@app/specs';
 import { raw } from 'hono/html';

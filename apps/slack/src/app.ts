@@ -1,4 +1,4 @@
-import { createAgentClient } from '@app/agent/client';
+import { createAgentClient } from '@app/agent-client';
 import { createQueryApiClient } from '@app/query-api/client';
 import { App, HTTPReceiver, LogLevel } from '@slack/bolt';
 import type { WebClient } from '@slack/web-api';

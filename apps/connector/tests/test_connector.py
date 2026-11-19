@@ -1,0 +1,83 @@
+"""The connector, case for case with apps/connector/src/connector.test.ts."""
+
+import json
+from typing import Any
+
+from mcp.client import Client
+
+from connector.server import create_connector
+
+
+class FakeApi:
+    async def services(self) -> Any:
+        return {'services': ['checkout', 'inventory']}
+
+    async def search(self, text: str, service: str | None = None) -> Any:
+        return {
+            'metrics': [{'name': 'http.server.request.duration', 'text': text}],
+            'endpoints': [],
+        }
+
+    async def endpoints(self, service: str) -> Any:
+        return {'endpoints': [{'method': 'POST', 'route': '/checkout/pay', 'p95': 0.8}]}
+
+    async def query(self, query: str, range_: str) -> Any:
+        if query == 'boom':
+            raise RuntimeError('too many lines')
+        return {
+            'series': [{'labels': {'http_route': '/pay'}, 'points': [[1, 0.5], [2, 0.9]]}],
+            'lineCount': 1,
+            'step': 60,
+        }
+
+
+async def test_offers_four_read_only_tools() -> None:
+    async with Client(create_connector(FakeApi())) as client:
+        tools = (await client.list_tools()).tools
+    assert [t.name for t in tools] == [
+        'list_services',
+        'search_metrics',
+        'endpoint_stats',
+        'query_metrics',
+    ]
+    assert all(t.annotations and t.annotations.read_only_hint for t in tools)
+
+
+async def test_summarises_a_query_per_line() -> None:
+    async with Client(create_connector(FakeApi())) as client:
+        result = await client.call_tool('query_metrics', {'query': 'up', 'range': '1h'})
+    assert not result.is_error
+    body = json.loads(result.content[0].text)  # type: ignore[union-attr]
+    assert body == {
+        'lines': 1,
+        'step_seconds': 60,
+        'series': [
+            {
+                'labels': {'http_route': '/pay'},
+                'points': 2,
+                'first': 0.5,
+                'last': 0.9,
+                'min': 0.5,
+                'max': 0.9,
+            }
+        ],
+    }
+
+
+async def test_refuses_a_range_that_is_not_a_duration() -> None:
+    async with Client(create_connector(FakeApi())) as client:
+        result = await client.call_tool('query_metrics', {'query': 'up', 'range': 'forever'})
+    assert result.is_error
+
+
+async def test_a_failed_query_is_an_error_result_with_the_reason() -> None:
+    async with Client(create_connector(FakeApi())) as client:
+        result = await client.call_tool('query_metrics', {'query': 'boom'})
+    assert result.is_error
+    assert result.content[0].text == 'The query failed: too many lines'  # type: ignore[union-attr]
+
+
+async def test_lists_services_as_pretty_json() -> None:
+    async with Client(create_connector(FakeApi())) as client:
+        result = await client.call_tool('list_services', {})
+    assert result.content[0].text == json.dumps({'services': ['checkout', 'inventory']}, indent=2)  # type: ignore[union-attr]
