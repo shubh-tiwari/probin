@@ -29,7 +29,8 @@
     "verify:phase2": "tsx --env-file-if-exists=.env scripts/verify-phase2.ts",
     "verify:phase3": "tsx --env-file-if-exists=.env scripts/verify-phase3.ts",
     "verify:phase4": "tsx --env-file-if-exists=.env scripts/verify-phase4.ts",
-    "verify:phase5": "tsx --env-file-if-exists=.env scripts/verify-phase5.ts"
+    "verify:phase5": "tsx --env-file-if-exists=.env scripts/verify-phase5.ts",
+    "site:build": "node scripts/build-site.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{NAME}}: ask your production a question</title>
+    <meta
+      name="description"
+      content="Ask for a chart, an alert or a data source in plain language, in Slack or the web. Get a tested query back. Review code with production metrics in view."
+    />
+    <meta property="og:title" content="{{NAME}}: ask your production a question" />
+    <meta
+      property="og:description"
+      content="Plain-language charts and alerts for teams that build with Claude Code, and a code reviewer that has read your metrics."
+    />
+    <meta property="og:image" content="/shots/slack-chart.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f3f6fa;
+        --grid: #dfe6ef;
+        --surface: #ffffff;
+        --ink: #13233a;
+        --muted: #56677d;
+        --line: #c9d3df;
+        --signal: #2463eb;
+        --threshold: #d4900c;
+        --threshold-soft: #fff4dc;
+        --code-bg: #eaf0f7;
+        --shadow: 0 1px 0 rgba(19, 35, 58, 0.06), 0 12px 32px -12px rgba(19, 35, 58, 0.22);
+        --measure: 68ch;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #0e1726;
+          --grid: #18253a;
+          --surface: #142036;
+          --ink: #e6edf6;
+          --muted: #9aabc1;
+          --line: #2a3a52;
+          --signal: #6d9bff;
+          --threshold: #f0b53a;
+          --threshold-soft: #2d2512;
+          --code-bg: #1a2840;
+          --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          400 17px/1.6 'Schibsted Grotesk',
+          system-ui,
+          sans-serif;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      a {
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 3px solid var(--signal);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      code,
+      pre {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 0.82em;
+      }
+      .wrap {
+        width: min(1160px, 100% - 32px);
+        margin-inline: auto;
+      }
+
+      /* Header */
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-block: 20px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+        text-decoration: none;
+      }
+      .top nav {
+        display: flex;
+        gap: 22px;
+        font-size: 15px;
+      }
+      .top nav a {
+        text-decoration: none;
+        color: var(--muted);
+      }
+      .top nav a:hover {
+        color: var(--ink);
+      }
+
+      /* Hero: graph paper with an alert threshold running through it */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: -1px -1px;
+        border-block: 1px solid var(--line);
+      }
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 31%;
+        border-top: 2px dashed var(--threshold);
+        opacity: 0.55;
+        pointer-events: none;
+      }
+      .hero-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1.08fr;
+        gap: 56px;
+        align-items: center;
+        padding-block: 88px 96px;
+      }
+      h1 {
+        font-size: clamp(42px, 6.2vw, 76px);
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+        font-weight: 800;
+        margin: 0 0 24px;
+        text-wrap: balance;
+      }
+      .lede {
+        font-size: 20px;
+        line-height: 1.5;
+        color: var(--muted);
+        max-width: 34ch;
+        margin: 0 0 32px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+        border: 1px solid var(--line);
+        background: var(--surface);
+      }
+      .btn.primary {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+      .btn:hover {
+        border-color: var(--ink);
+      }
+
+      /* The thread: what a question looks like */
+      .thread {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 18px 18px 16px;
+        font-size: 15px;
+      }
+      .thread-head {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+        padding: 0 4px 12px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 14px;
+      }
+      .msg {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 14px;
+        background: var(--code-bg);
+      }
+      .avatar.bot {
+        background: var(--signal);
+        color: #fff;
+      }
+      .who {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .msg p {
+        margin: 2px 0 0;
+      }
+      .answer {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: var(--code-bg);
+        font-size: 13px;
+      }
+      .chart {
+        margin-top: 8px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+      }
+      .assumed {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 8px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .chips span {
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 5px 10px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+      }
+
+      /* Sections */
+      section {
+        padding-block: 96px;
+      }
+      h2 {
+        font-size: clamp(32px, 4vw, 48px);
+        line-height: 1.05;
+        letter-spacing: -0.025em;
+        font-weight: 800;
+        margin: 0 0 16px;
+        text-wrap: balance;
+      }
+      h3 {
+        font-size: 22px;
+        letter-spacing: -0.01em;
+        margin: 0 0 8px;
+      }
+      .intro {
+        max-width: var(--measure);
+        color: var(--muted);
+        font-size: 19px;
+        margin: 0 0 48px;
+      }
+
+      /* Steps: a real sequence, so it is numbered */
+      .steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        border-top: 2px solid var(--ink);
+        padding-top: 18px;
+      }
+      .steps li::before {
+        content: counter(step);
+        display: block;
+        font-size: 44px;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--signal);
+        margin-bottom: 14px;
+      }
+      .steps p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      /* Features: text beside a real screenshot */
+      .feature {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 56px;
+        align-items: center;
+        padding-block: 56px;
+        border-top: 1px solid var(--line);
+      }
+      .feature:nth-child(even) {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+      .feature:nth-child(even) .copy {
+        order: 2;
+      }
+      .feature .copy p {
+        color: var(--muted);
+        margin: 0 0 14px;
+      }
+      .feature ul {
+        margin: 0;
+        padding-left: 1.1em;
+        color: var(--muted);
+      }
+      .feature li {
+        margin-bottom: 6px;
+      }
+      .shot {
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        background: #fff;
+      }
+
+      /* Promises */
+      .promises {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .promises h2 {
+        color: var(--paper);
+      }
+      .promise-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px 56px;
+        max-width: 960px;
+      }
+      .promise-grid h3 {
+        color: var(--paper);
+      }
+      .promise-grid p {
+        margin: 0;
+        opacity: 0.78;
+      }
+      @media (prefers-color-scheme: dark) {
+        .promises {
+          background: var(--surface);
+          color: var(--ink);
+          border-block: 1px solid var(--line);
+        }
+        .promises h2,
+        .promise-grid h3 {
+          color: var(--ink);
+        }
+      }
+
+      /* Run it */
+      .terminal {
+        background: #0f1a2b;
+        color: #d8e2f0;
+        border-radius: 14px;
+        padding: 22px 24px;
+        overflow-x: auto;
+        line-height: 1.8;
+        max-width: 760px;
+        box-shadow: var(--shadow);
+      }
+      .terminal .c {
+        color: #7f93ad;
+      }
+      .terminal .p {
+        color: #8fb4ff;
+        user-select: none;
+      }
+      .small {
+        color: var(--muted);
+        font-size: 15px;
+        max-width: var(--measure);
+        margin-top: 20px;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding-block: 32px 48px;
+        color: var(--muted);
+        font-size: 15px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      /* One orchestrated moment: the thread arrives message by message */
+      @media (prefers-reduced-motion: no-preference) {
+        .thread .msg,
+        .thread .chart-wrap {
+          animation: arrive 0.5s ease-out both;
+        }
+        .thread .msg:nth-of-type(1) {
+          animation-delay: 0.15s;
+        }
+        .thread .msg:nth-of-type(2) {
+          animation-delay: 0.75s;
+        }
+        .thread .msg:nth-of-type(3) {
+          animation-delay: 1.35s;
+        }
+        .thread .msg:nth-of-type(4) {
+          animation-delay: 1.95s;
+        }
+        @keyframes arrive {
+          from {
+            opacity: 0;
+            transform: translateY(6px);
+          }
+        }
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid,
+        .feature,
+        .feature:nth-child(even) {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .feature:nth-child(even) .copy {
+          order: 0;
+        }
+        .hero-grid {
+          padding-block: 56px 64px;
+        }
+        .steps,
+        .promise-grid {
+          grid-template-columns: 1fr;
+        }
+        .top nav {
+          display: none;
+        }
+        section {
+          padding-block: 64px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="wrap top">
+      <a class="brand" href="/">
+        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="currentColor" />
+          <path
+            d="M6 21 L11 15 L15 18 L20 9 L26 13"
+            fill="none"
+            stroke="#6d9bff"
+            stroke-width="2.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path d="M5 24 H27" stroke="#f0b53a" stroke-width="1.6" stroke-dasharray="2.5 2" />
+        </svg>
+        {{NAME}}
+      </a>
+      <nav aria-label="Page">
+        <a href="#how">How it works</a>
+        <a href="#watch">Watch</a>
+        <a href="#review">Review</a>
+        <a href="#run">Run it</a>
+        <a href="{{REPO_URL}}">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <h1>Ask your production a question.</h1>
+            <p class="lede">
+              Type what you want to see, in Slack or the web. {{NAME}} finds the metric, writes the
+              query, tests it, and hands back a chart that shows its working.
+            </p>
+            <div class="actions">
+              <a class="btn primary" href="#run">Run it locally</a>
+              <a class="btn" href="{{REPO_URL}}">View on GitHub</a>
+            </div>
+          </div>
+
+          <figure class="thread" aria-label="An example conversation in Slack">
+            <div class="thread-head"><span>#ops thread</span><span>Watch</span></div>
+            <div class="msg">
+              <div class="avatar" aria-hidden="true">A</div>
+              <div>
+                <div class="who">Alice</div>
+                <p>p95 latency of checkout service in last 3 hr</p>
+              </div>
+            </div>
+            <div class="msg">
+              <div class="avatar bot" aria-hidden="true">✦</div>
+              <div>
+                <div class="who">{{NAME}}</div>
+                <p>Which endpoint?</p>
+                <span class="answer">POST /checkout/pay, picked by Alice</span>
+              </div>
+            </div>
+            <div class="msg">
+              <div class="avatar bot" aria-hidden="true">✦</div>
+              <div>
+                <div class="who">{{NAME}}</div>
+                <p>Count failed requests too?</p>
+                <span class="answer">Yes, all requests</span>
+              </div>
+            </div>
+            <div class="msg">
+              <div class="avatar bot" aria-hidden="true">✦</div>
+              <div class="chart-wrap">
+                <div class="who">{{NAME}}</div>
+                <p>
+                  P95 latency was 963 ms most recently, between 487 ms and 1507 ms over the last 3
+                  hours.
+                </p>
+                <img
+                  class="chart"
+                  src="/shots/slack-chart.png"
+                  width="1600"
+                  height="720"
+                  alt="Line chart of p95 latency for POST /checkout/pay over three hours, mostly between 500 and 1500 ms"
+                />
+                <div class="assumed">
+                  Assumed: p95, all requests including failures, all regions combined
+                </div>
+                <div class="chips" aria-hidden="true">
+                  <span>Save to dashboard</span><span>Alert me on this</span
+                  ><span>Open in web</span>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </div>
+
+      <section id="how" class="wrap">
+        <h2>From a sentence to a chart you can trust</h2>
+        <p class="intro">
+          No query language, no dashboard building, and no guessing which metric is the right one.
+          Every query is checked against what your services actually send before you see it.
+        </p>
+        <ol class="steps">
+          <li>
+            <h3>Instrument with Claude Code</h3>
+            <p>
+              Run the skill in your repository. It adds OpenTelemetry metrics that follow one
+              convention and writes a manifest of every endpoint and metric.
+            </p>
+          </li>
+          <li>
+            <h3>Ask in plain language</h3>
+            <p>
+              Mention the bot in Slack or type in the web tool. It asks at most two short questions,
+              then states every other assumption so you can change it.
+            </p>
+          </li>
+          <li>
+            <h3>Keep it, watch it</h3>
+            <p>
+              Save the chart to a dashboard, or turn it into an alert. Rules stay inactive until a
+              person approves them.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="watch" class="wrap" style="padding-top: 0">
+        <div class="feature">
+          <div class="copy">
+            <h3>Dashboards that explain themselves</h3>
+            <p>
+              Each panel shows its query, its assumptions and a one-line reading of what the chart
+              says. To change a panel, type what you want.
+            </p>
+            <ul>
+              <li>“Split by endpoint, last 24 hours”</li>
+              <li>Share a read-only link, or export to Grafana</li>
+              <li>Prometheus-compatible API and a Claude Code connector</li>
+            </ul>
+          </div>
+          <img
+            class="shot"
+            src="/shots/web-dashboard.png"
+            width="1280"
+            height="860"
+            decoding="async"
+            alt="The web dashboard: panels for checkout p95 latency and requests per second by endpoint, each with its query and assumptions"
+          />
+        </div>
+
+        <div class="feature">
+          <div class="copy">
+            <h3>Alerts that wait for a yes</h3>
+            <p>
+              “Alert me if checkout p95 goes above 800 ms” becomes a drafted rule with the query in
+              plain view. Nothing is watched until a person approves it, and editing a rule sends it
+              back for approval.
+            </p>
+            <ul>
+              <li>Suggested rules when a new service first sends data</li>
+              <li>“Why did this happen?” with the charts behind the answer</li>
+              <li>Uptime checks on your own URLs, from a sentence</li>
+            </ul>
+          </div>
+          <img
+            class="shot"
+            src="/shots/web-alerts.png"
+            width="1280"
+            height="860"
+            decoding="async"
+            alt="Alert rules for inventory and checkout, each pending approval with Approve, Edit and Discard buttons"
+          />
+        </div>
+
+        <div class="feature" id="review">
+          <div class="copy">
+            <h3>A reviewer that has read your metrics</h3>
+            <p>
+              Review connects to GitHub and reads your code alongside live traffic. It ranks the
+              slowest endpoints, points at the line in the handler, and suggests a fix.
+            </p>
+            <ul>
+              <li>Comments on pull requests that touch hot paths</li>
+              <li>Follows up after a deploy if latency moved</li>
+              <li>Maps the calls between your services</li>
+            </ul>
+          </div>
+          <img
+            class="shot"
+            src="/shots/review-bottlenecks.png"
+            width="1280"
+            height="860"
+            decoding="async"
+            alt="Bottleneck report: the slowest endpoint is GET /inventory/stock/history at p95 2446 ms, with the handler line and a suggested fix"
+          />
+        </div>
+      </section>
+
+      <section class="promises">
+        <div class="wrap">
+          <h2>Built to be checked, not trusted</h2>
+          <p class="intro" style="opacity: 0.78; color: inherit">
+            A model that guesses metric names produces charts that look right and are wrong. These
+            rules are enforced in code, not in a prompt.
+          </p>
+          <div class="promise-grid">
+            <div>
+              <h3>No invented metrics</h3>
+              <p>
+                Every name in a query must exist in your catalog. A query that mentions anything
+                else is refused before it runs.
+              </p>
+            </div>
+            <div>
+              <h3>Tested before you see it</h3>
+              <p>
+                Each query runs against your data first. If it returns nothing, it is rewritten or
+                you are told plainly that nothing matches.
+              </p>
+            </div>
+            <div>
+              <h3>Your data stays yours</h3>
+              <p>
+                Every query is rewritten to your workspace when it is parsed, and the metrics store
+                enforces it a second time.
+              </p>
+            </div>
+            <div>
+              <h3>One flat price</h3>
+              <p>
+                Priced per workspace, not per seat, with a free trial. Dashboards keep working even
+                if the model budget runs out.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="run" class="wrap">
+        <h2>Run the whole thing on your laptop</h2>
+        <p class="intro">
+          One command starts the stores, every service, two instrumented demo services with traffic,
+          and local stand-ins for Slack, GitHub and Stripe. No accounts or keys needed.
+        </p>
+        <pre class="terminal"><code><span class="p">$</span> git clone {{REPO_URL}}.git
+<span class="p">$</span> cd {{REPO_SLUG}} &amp;&amp; make dev
+<span class="p">$</span> pnpm ask "latency graph of checkout service in last 5 hr"
+<span class="c"># then open http://localhost:8094 and sign in with the local Slack</span></code></pre>
+        <p class="small">
+          Needs Node 22, pnpm, Docker and Make. With no model key, a built-in stand-in answers
+          common requests, so nothing costs money. Add an OpenRouter key to use real models.
+        </p>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      <span>{{NAME}}: Watch and Review, for teams that build with Claude Code.</span>
+      <a href="{{REPO_URL}}">Source on GitHub</a>
+    </footer>
+  </body>
+</html>
