@@ -16,7 +16,7 @@ and hands back a chart that shows its working. Then it reviews your code with th
 ![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-native-2463eb)
 ![Runs locally](https://img.shields.io/badge/runs%20locally-no%20keys%20needed-d4900c)
 
-[Quick start](#quick-start) · [How it works](#how-it-works) · [Features](#features) ·
+[Quick start](#quick-start) · [How it works](#how-it-works) · [Features](#features) · [Review](#review-a-code-reviewer-that-has-read-your-metrics) ·
 [Architecture](#architecture) · [Deploy](#deploy)
 
 <br />
@@ -96,6 +96,76 @@ handler line, suggests a fix, comments on pull requests and follows up after dep
 **Also included:** uptime checks on your own URLs from a sentence · a Prometheus-compatible read
 API · a Claude Code connector (MCP) · per-person memory ("skip questions next time") · Stripe
 billing with a free trial · data export and deletion.
+
+## Review: a code reviewer that has read your metrics
+
+Most code review sees only the diff. Review also knows which endpoints are slow, how often they are
+called and how often they fail, because it reads the same metrics as Watch. It is a GitHub App: you
+install it on a repository from **Settings → GitHub**, and it starts working on the next pull
+request.
+
+### What it does
+
+| Job                         | When it runs                                                 | What you get                                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Bottleneck report**       | Every Monday at 07:00 UTC, or on demand from the Review page | The slowest endpoints, ranked by p95, each linked to its handler's file and line, with a suggested fix                                                |
+| **Pull request comments**   | Every pull request                                           | A note when the change touches an endpoint that matters ("your slowest endpoint in checkout"), with its current latency, traffic and error rate       |
+| **Metric convention check** | Every pull request, on the added lines only                  | Inline comments on metrics that will cause trouble: wrong units, personal data in attributes, unbounded attributes, metrics missing from the manifest |
+| **After-deploy follow-up**  | After a deploy, once the comparison window has passed        | A note on the pull request and in Slack, only if latency or errors moved                                                                              |
+| **Architecture review**     | On demand                                                    | A map of which services call which, built from real traffic, with findings such as a call made on every request                                       |
+
+### How it works
+
+```mermaid
+flowchart LR
+  pr[Pull request<br/>or deploy] -- webhook --> review[Review]
+  review -- read-only --> code[Code index<br/>routes → handler lines]
+  review -- Query API --> metrics[Your metrics<br/>p95, traffic, errors]
+  code --> link{Match by<br/>http.route}
+  metrics --> link
+  link --> findings[Findings<br/>with evidence]
+  findings --> gh[Comments on<br/>the pull request]
+  findings --> page[Review page<br/>Accept · Dismiss]
+```
+
+1. **Index the code.** For each commit, Review finds every route definition (Express and FastAPI),
+   the handler's line range, outbound calls and the service's manifest. Only this index is kept, not
+   the code.
+2. **Join it to the metrics.** Each endpoint in the metrics carries its route template in
+   `http.route`, so Review can say "POST /checkout/pay is slow, and its handler is
+   `checkout/server.cjs` line 30".
+3. **Explain the finding.** Every finding names the metric and time window it rests on, and the
+   review page shows the query behind it. Suggested fixes come from the handler's code: a loop that
+   waits on each step in turn, or a call to another service.
+4. **Learn from dismissals.** Dismiss a kind of comment as not useful and Review stops posting that
+   kind on that repository.
+
+### Real comments from the demo repository
+
+These were posted by Review on pull requests to the demo services (`pnpm verify:phase5` opens them).
+
+> **This changes POST /checkout/pay, your slowest endpoint in checkout**
+>
+> Over the last 24h: p95 846 ms, 0.78 req/s, 0.5% failed. After this is deployed, I will compare
+> the numbers and note here if latency or errors move.
+
+> **The attribute user.id looks personal or secret** · _on `checkout/server.cjs`, line 62_
+>
+> No user ids, emails, tokens or other personal or secret values in metric attributes.
+
+> **http.server.requests is a separate request counter** · _on `checkout/server.cjs`, line 8_
+>
+> Request counts and error rates come from http.server.request.duration. Remove this counter.
+
+### Limits
+
+- Review reads code and never pushes commits. Apart from comments, its GitHub access is read-only.
+- Suggested fixes come from rules, not a model, for now.
+- Routes are understood for Express (JavaScript) and FastAPI (Python).
+
+**Try it locally:** sign in at <http://localhost:8094>, open **Settings → GitHub → Connect GitHub**
+(the local GitHub approves at once), then **Review → Run the bottleneck report**. The full walkthrough
+is in the [Review runbook](docs/runbooks/phase-5.md).
 
 ## Built to be checked, not trusted
 
@@ -188,16 +258,34 @@ scripts/       acceptance checks and repository checks
 
 ## Deploy
 
-**The product site** deploys to Vercel in one click with the button at the top, or with
-`vercel --prod` from the repository root. `vercel.json` runs `node scripts/build-site.mjs`, which
-needs no install, and serves `site/dist`. Build it locally with `pnpm site:build`.
+**The product site** deploys to Vercel: import this repository at
+[vercel.com/new](https://vercel.com/new) and keep the defaults. `vercel.json` does the rest. Build
+it locally with `pnpm site:build`.
 
 **The product itself** is a set of long-running services (a metrics store, a collector, workers and
-an alert engine), so it runs with Docker Compose on any server: a VM, Fly.io, Railway or Render.
-Connecting real Slack, GitHub and Stripe apps needs a public HTTPS address. The runbooks cover each
-step: [0](docs/runbooks/phase-0.md) · [1](docs/runbooks/phase-1.md) ·
-[2 Slack](docs/runbooks/phase-2.md) · [3 Web](docs/runbooks/phase-3.md) ·
-[4 Alerts and billing](docs/runbooks/phase-4.md) · [5 Review](docs/runbooks/phase-5.md).
+an alert engine), so it runs with Docker Compose on any server. Connecting real Slack, GitHub and
+Stripe apps needs a public HTTPS address.
+
+## Docs
+
+| Read this                            | For                                                    |
+| ------------------------------------ | ------------------------------------------------------ |
+| [Build plan](docs/build-plan.md)     | What the product is and the six phases it was built in |
+| [Decisions](docs/decisions.md)       | Choices the plan left open, and why                    |
+| [Runbooks](docs/runbooks/phase-0.md) | Running, connecting and fixing each part (see below)   |
+| [Query test set](evals/README.md)    | Measuring the agent, and switching to real models      |
+
+<details>
+<summary>All runbooks</summary>
+
+- [Foundations](docs/runbooks/phase-0.md): the stores, the collector, local setup
+- [Core loop](docs/runbooks/phase-1.md): ingestion, catalog, agent, real models
+- [Slack](docs/runbooks/phase-2.md): the Slack app and connecting a real workspace
+- [Web tool](docs/runbooks/phase-3.md): dashboards, sharing, the read API
+- [Alerts and billing](docs/runbooks/phase-4.md): alert rules, data sources, Stripe
+- [Review](docs/runbooks/phase-5.md): GitHub App, reports, pull request comments
+
+</details>
 
 ## Status
 
