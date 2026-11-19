@@ -7,7 +7,7 @@
 Type what you want to see, in Slack or the web. Probin finds the metric, writes the query, tests it,
 and hands back a chart that shows its working. Then it reviews your code with those metrics in view.
 
-**Built for teams whose software is written with Claude Code.**
+**Built for teams whose software is written by coding agents like Claude Code.**
 
 [![Deploy the site with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshubh-tiwari%2Fprobin)
 
@@ -21,7 +21,7 @@ and hands back a chart that shows its working. Then it reviews your code with th
 
 <br />
 
-<img src="docs/screenshots/slack-chart.png" alt="A chart Probin posted in Slack: p95 latency of POST /checkout/pay over three hours" width="820" />
+<img src="docs/screenshots/poster.png" alt="Probin: ask your production a question. A Slack thread where Probin asks two questions and answers with a p95 latency chart." width="100%" />
 
 </div>
 
@@ -33,10 +33,10 @@ Dashboards are slow to build, and asking a model for a query gives you something
 a metric name it guessed, a label that doesn't exist, a chart of nothing. Probin closes that gap.
 
 ```text
-alice  @bot p95 latency of checkout service in last 3 hr
+alice  @bot p95 latency of checkout service in last 30 minutes
 bot    Which endpoint?                    → POST /checkout/pay
 bot    Count failed requests too?         → Yes, all requests
-bot    P95 latency was 963 ms most recently, between 487 ms and 1507 ms over the last 3 hours.
+bot    P95 latency was 690 ms most recently, between 541 ms and 1410 ms over the last 30 minutes.
        [chart]
        Assumed: p95 · all requests including failures · all regions combined
        [Save to dashboard] [Alert me on this] [Open in web] [Skip questions next time]

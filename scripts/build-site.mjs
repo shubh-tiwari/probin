@@ -32,17 +32,21 @@ function repository() {
 }
 
 const repo = repository();
-const html = readFileSync(at('site/src/index.html'), 'utf8')
-  .replaceAll('{{NAME}}', name)
-  .replaceAll('{{REPO_URL}}', repo.url)
-  .replaceAll('{{REPO_SLUG}}', repo.slug);
-const left = /\{\{[A-Z_]+\}\}/.exec(html);
-if (left) throw new Error(`Unfilled placeholder in the site: ${left[0]}`);
+const fill = (file) => {
+  const html = readFileSync(at(`site/src/${file}`), 'utf8')
+    .replaceAll('{{NAME}}', name)
+    .replaceAll('{{REPO_URL}}', repo.url)
+    .replaceAll('{{REPO_SLUG}}', repo.slug);
+  const left = /\{\{[A-Z_]+\}\}/.exec(html);
+  if (left) throw new Error(`Unfilled placeholder in site/src/${file}: ${left[0]}`);
+  return html;
+};
 
 const out = at('site/dist');
 rmSync(out, { recursive: true, force: true });
 mkdirSync(`${out}/shots`, { recursive: true });
-writeFileSync(`${out}/index.html`, html);
+writeFileSync(`${out}/index.html`, fill('index.html'));
+writeFileSync(`${out}/poster.html`, fill('poster.html'));
 cpSync(at('site/src/favicon.svg'), `${out}/favicon.svg`);
 cpSync(at('docs/screenshots'), `${out}/shots`, { recursive: true });
 console.log(`Built the site for ${name} into site/dist (repository: ${repo.url}).`);

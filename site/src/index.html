@@ -11,9 +11,9 @@
     <meta property="og:title" content="{{NAME}}: ask your production a question" />
     <meta
       property="og:description"
-      content="Plain-language charts and alerts for teams that build with Claude Code, and a code reviewer that has read your metrics."
+      content="Plain-language charts and alerts for teams that build with coding agents, and a code reviewer that has read your metrics."
     />
-    <meta property="og:image" content="/shots/slack-chart.png" />
+    <meta property="og:image" content="/shots/poster.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -524,7 +524,7 @@
               <div class="avatar" aria-hidden="true">A</div>
               <div>
                 <div class="who">Alice</div>
-                <p>p95 latency of checkout service in last 3 hr</p>
+                <p>p95 latency of checkout service in last 30 minutes</p>
               </div>
             </div>
             <div class="msg">
@@ -548,15 +548,15 @@
               <div class="chart-wrap">
                 <div class="who">{{NAME}}</div>
                 <p>
-                  P95 latency was 963 ms most recently, between 487 ms and 1507 ms over the last 3
-                  hours.
+                  P95 latency was 690 ms most recently, between 541 ms and 1410 ms over the last 30
+                  minutes.
                 </p>
                 <img
                   class="chart"
                   src="/shots/slack-chart.png"
                   width="1600"
                   height="720"
-                  alt="Line chart of p95 latency for POST /checkout/pay over three hours, mostly between 500 and 1500 ms"
+                  alt="Line chart of p95 latency for POST /checkout/pay over 30 minutes, between about 540 and 1410 ms"
                 />
                 <div class="assumed">
                   Assumed: p95, all requests including failures, all regions combined
@@ -732,7 +732,7 @@
     </main>
 
     <footer class="wrap">
-      <span>{{NAME}}: Watch and Review, for teams that build with Claude Code.</span>
+      <span>{{NAME}}: Watch and Review, for teams that build with coding agents.</span>
       <a href="{{REPO_URL}}">Source on GitHub</a>
     </footer>
   </body>
