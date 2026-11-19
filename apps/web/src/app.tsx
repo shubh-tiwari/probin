@@ -36,14 +36,14 @@ import type { SlackStore } from '@app/slack';
 import type { PanelSpec } from '@app/specs';
 import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import { createHmac } from 'node:crypto';
-import { recordDecision } from '@app/review';
+import { CONTEXT_LIMITS, productionContext, recordDecision, type SourceFile } from '@app/review';
 import { ReviewListPage, ReviewReportPage, type FindingView } from './views/review.js';
 import { Hono, type Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { mountAuth } from './auth.js';
 import { CLIENT_SCRIPT } from './client-script.js';
 import { SESSION_COOKIE, openSession, type Session } from './session.js';
-import { CHART_THEME } from './theme.js';
+import { CHART_THEME, DARK_CHART_THEME } from './theme.js';
 import { Chart, DashboardPage, RANGES, type ChartView, type PanelView } from './views/dashboard.js';
 import { MessagePage } from './views/layout.js';
 import { MemoryPage } from './views/memory.js';
@@ -282,6 +282,42 @@ export function createWebApp(options: WebOptions) {
     });
     return c.json(result);
   });
+  /**
+   * Production context for files a coding agent is about to change: the
+   * endpoints they handle and what production says about each. The files are
+   * read, never stored.
+   */
+  api.post('/v1/context', async (c) => {
+    const body = (await c.req.json().catch(() => ({}))) as { files?: unknown; manifests?: unknown };
+    const sources = (value: unknown) =>
+      Array.isArray(value)
+        ? value.filter(
+            (f): f is SourceFile =>
+              typeof f === 'object' &&
+              f !== null &&
+              typeof (f as SourceFile).path === 'string' &&
+              typeof (f as SourceFile).content === 'string',
+          )
+        : [];
+    const files = sources(body.files);
+    const manifests = sources(body.manifests);
+    if (files.length === 0) return c.json({ error: '"files" is required.' }, 400);
+    if (files.length > CONTEXT_LIMITS.files) {
+      return c.json({ error: `At most ${CONTEXT_LIMITS.files} files at a time.` }, 400);
+    }
+    if ([...files, ...manifests].some((f) => f.content.length > CONTEXT_LIMITS.bytesPerFile)) {
+      return c.json({ error: 'A file is too large.' }, 413);
+    }
+    const workspaceId = c.get('workspaceId');
+    return c.json(
+      await productionContext({
+        files,
+        manifests,
+        query: queryFor({ workspaceId } as Session),
+        rules: await createAlertStore(options.db, workspaceId).list(),
+      }),
+    );
+  });
   app.route('/api', api as unknown as Hono<{ Variables: Variables }>);
 
   // Everything below needs a signed-in person, and forms must come from this site.
@@ -328,6 +364,12 @@ export function createWebApp(options: WebOptions) {
         svg: renderSvg(spec, result.series, {
           ...size,
           theme: CHART_THEME,
+          range: effective,
+          title: false,
+        }),
+        svgDark: renderSvg(spec, result.series, {
+          ...size,
+          theme: DARK_CHART_THEME,
           range: effective,
           title: false,
         }),

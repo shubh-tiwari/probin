@@ -31,7 +31,7 @@ class FakeApi:
         }
 
 
-async def test_offers_four_read_only_tools() -> None:
+async def test_offers_five_read_only_tools() -> None:
     async with Client(create_connector(FakeApi())) as client:
         tools = (await client.list_tools()).tools
     assert [t.name for t in tools] == [
@@ -39,6 +39,7 @@ async def test_offers_four_read_only_tools() -> None:
         'search_metrics',
         'endpoint_stats',
         'query_metrics',
+        'production_context',
     ]
     assert all(t.annotations and t.annotations.read_only_hint for t in tools)
 
@@ -81,3 +82,59 @@ async def test_lists_services_as_pretty_json() -> None:
     async with Client(create_connector(FakeApi())) as client:
         result = await client.call_tool('list_services', {})
     assert result.content[0].text == json.dumps({'services': ['checkout', 'inventory']}, indent=2)  # type: ignore[union-attr]
+
+
+class ContextApi(FakeApi):
+    def __init__(self) -> None:
+        self.sent: dict[str, Any] = {}
+
+    async def context(self, files: list[dict[str, str]], manifests: list[dict[str, str]]) -> Any:
+        self.sent = {'files': files, 'manifests': manifests}
+        return {'summary': 'Production context from the last hour of metrics.'}
+
+
+def repo(tmp: Any) -> Any:
+    from appcommon.product import manifest_filename
+
+    (tmp / '.git').mkdir()
+    service = tmp / 'services' / 'checkout'
+    (service / 'src').mkdir(parents=True)
+    (service / manifest_filename()).write_text('service: checkout\n')
+    (service / 'src' / 'server.cjs').write_text("app.post('/checkout/pay', async () => {});\n")
+    return tmp
+
+
+async def test_production_context_sends_the_files_and_their_manifest(tmp_path: Any) -> None:
+    from appcommon.product import manifest_filename
+
+    root = repo(tmp_path)
+    api = ContextApi()
+    async with Client(create_connector(api, cwd=root / 'services')) as client:
+        result = await client.call_tool(
+            'production_context', {'paths': ['checkout/src/server.cjs']}
+        )
+    assert not result.is_error
+    assert result.content[0].text.startswith('Production context')  # type: ignore[union-attr]
+    assert api.sent['files'] == [
+        {
+            'path': 'services/checkout/src/server.cjs',
+            'content': "app.post('/checkout/pay', async () => {});\n",
+        }
+    ]
+    assert api.sent['manifests'] == [
+        {'path': f'services/checkout/{manifest_filename()}', 'content': 'service: checkout\n'}
+    ]
+
+
+async def test_production_context_reports_files_it_could_not_read(tmp_path: Any) -> None:
+    root = repo(tmp_path)
+    api = ContextApi()
+    async with Client(create_connector(api, cwd=root)) as client:
+        partly = await client.call_tool(
+            'production_context',
+            {'paths': ['services/checkout/src/server.cjs', 'nope.js', '../../etc/passwd']},
+        )
+        none = await client.call_tool('production_context', {'paths': ['nope.js']})
+    text = partly.content[0].text  # type: ignore[union-attr]
+    assert 'Not read: nope.js: no such file; ../../etc/passwd: outside the repository' in text
+    assert none.is_error

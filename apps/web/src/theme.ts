@@ -16,12 +16,39 @@ export const COLORS = {
   divider: '#ECEEF2',
   accent: '#1F5FD0',
   accentHover: '#174AA6',
+  /** Primary buttons: background and the text on it. */
+  accentButton: '#1F5FD0',
+  onAccent: '#FFFFFF',
   accentSoft: '#E9EEF9',
   accentSoftText: '#16233F',
   warning: '#B4540A',
   pendingBg: '#FCEFD9',
   pendingText: '#7A3A05',
   danger: '#A61B1B',
+  onWarning: '#FFFFFF',
+};
+
+/** The dark look, in the product site's language: night navy, violet light. */
+export const DARK_COLORS: typeof COLORS = {
+  page: '#070A1A',
+  surface: '#10153A',
+  text: '#EEF0FF',
+  secondary: '#C3C8E8',
+  muted: '#9AA3C7',
+  border: '#2A3166',
+  control: '#3B4382',
+  divider: '#1C2250',
+  accent: '#A99CFF',
+  accentHover: '#C4BBFF',
+  accentButton: '#6A4CE0',
+  onAccent: '#FFFFFF',
+  accentSoft: '#262066',
+  accentSoftText: '#DCD6FF',
+  warning: '#F5B544',
+  pendingBg: '#3A2C10',
+  pendingText: '#F8D58A',
+  danger: '#FF8A8A',
+  onWarning: '#1A1300',
 };
 
 export const CHART_THEME: ChartTheme = {
@@ -40,6 +67,15 @@ export const CHART_THEME: ChartTheme = {
     '#1B1F27',
   ],
   font: "Inter, system-ui, 'DejaVu Sans', sans-serif",
+};
+
+export const DARK_CHART_THEME: ChartTheme = {
+  background: DARK_COLORS.surface,
+  text: DARK_COLORS.text,
+  muted: DARK_COLORS.muted,
+  grid: '#232B5E',
+  colors: ['#A99CFF', '#F5A35C', '#4FD1A5', '#5EC8FF', '#F472B6', '#FFD166', '#C084FC', '#CBD5F5'],
+  font: CHART_THEME.font,
 };
 
 /** WCAG contrast ratio of two #RRGGBB colours. */

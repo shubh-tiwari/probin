@@ -34,6 +34,12 @@ What phase 4 added and how to run it. The earlier runbooks still apply.
 - Web: **Alerts**, **Data sources**, **Settings** (alert channel, API tokens, shared links, your own store), **Billing**.
 - Connector for Claude Code: make a token in Settings, then
   `claude mcp add metrics -e METRICS_API_URL=http://localhost:8094 -e METRICS_API_TOKEN=<token> -- uv run --project apps/connector connector`
+  Its tools: `list_services`, `search_metrics`, `endpoint_stats`, `query_metrics`, and
+  `production_context`. The last takes the files an agent is about to edit and returns, for each
+  endpoint they handle, the last hour's p95, traffic and failure rate, how it ranks in its
+  service, the alert rules watching it, the calls it makes and where its time likely goes. It
+  reads local files (edits included) and the service manifest above them; nothing is stored. The
+  skill tells agents to call it before changing request handlers.
 - Grafana: add a Prometheus data source with URL `<web>/api/prom` and header `Authorization: Bearer <token>`, then import an exported dashboard.
 
 ## Billing

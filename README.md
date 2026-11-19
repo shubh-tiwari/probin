@@ -98,8 +98,28 @@ charts.
 </table>
 
 **Also included:** uptime checks on your own URLs from a sentence · a Prometheus-compatible read
-API · a Claude Code connector (MCP) · per-person memory ("skip questions next time") · Stripe
+API · a connector for coding agents (MCP) with production context · per-person memory ("skip questions next time") · Stripe
 billing with a free trial · data export and deletion.
+
+## For coding agents: production context while they write
+
+A review comment after the pull request means another round: the agent reads it, revises and
+pushes again. The connector gives the agent the same facts **before** it writes. Its
+`production_context` tool takes the files the agent is about to edit and answers in a few lines,
+from live metrics:
+
+```text
+infra/demo/inventory-python/main.py (service inventory)
+- GET /inventory/stock/history (line 111, get_stock_history): p95 2418 ms, 0.165 req/s, 0% failed.
+  It is the slowest of 4 endpoints in inventory.
+  Where time goes: the handler waits for each step of the loop at line 115 in turn. Fetch the
+  items in one query, or run the steps concurrently, so the time does not grow with the number
+  of items.
+```
+
+It reads the files on the developer's machine, edits included, and the service manifest above
+them; nothing is stored. The skill tells agents to call it before they change a request handler.
+Add the connector to Claude Code with the command in the [phase 4 runbook](docs/runbooks/phase-4.md).
 
 ## Review: a code reviewer that has read your metrics
 
@@ -190,9 +210,20 @@ You need Node 22.12 or newer, pnpm, [uv](https://docs.astral.sh/uv/) (for the Py
 ```sh
 git clone https://github.com/shubh-tiwari/probin.git
 cd probin
-make dev
+make dev      # first run: creates .env from .env.example, then starts everything
 pnpm ask "latency graph of checkout service in last 5 hr"
 ```
+
+**Settings: nothing to fill in to try it.** The first `make dev` copies `.env.example` to `.env`:
+local ports, the local database password, and values for the stand-in Slack, GitHub and Stripe,
+all marked dev-only. It also makes a throwaway key for the stand-in GitHub in `.dev-secrets/`. Both
+stay on your machine; git ignores them.
+
+| To                                   | Do                                                                              |
+| ------------------------------------ | ------------------------------------------------------------------------------- |
+| Use real models                      | Add `OPENROUTER_API_KEY=…` to `.env`, then `make dev` again                     |
+| Connect real Slack, GitHub or Stripe | Replace their values in `.env`; the [runbooks](#docs) say where each comes from |
+| Free a port that is taken            | Change it in `.env`, for example `WEB_PORT=8094`                                |
 
 `make dev` starts everything: Postgres, VictoriaMetrics, the OpenTelemetry Collector, every service,
 two instrumented demo services (Node and Python) with traffic, and local stand-ins for Slack, GitHub

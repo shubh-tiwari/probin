@@ -422,13 +422,35 @@
           and local stand-ins for Slack, GitHub and Stripe. No accounts or keys needed.
         </p>
         <pre class="terminal"><code><span class="p">$</span> git clone {{REPO_URL}}.git
-<span class="p">$</span> cd {{REPO_SLUG}} &amp;&amp; make dev
+<span class="p">$</span> cd {{REPO_SLUG}}
+<span class="p">$</span> make dev   <span class="c"># first run: creates .env from .env.example, then starts everything</span>
 <span class="p">$</span> pnpm ask "latency graph of checkout service in last 5 hr"
 <span class="c"># then open http://localhost:8094 and sign in with the local Slack</span></code></pre>
-        <p class="small">
-          Needs Node 22.12 or newer, pnpm, uv, Docker and Make. With no model key, a built-in
-          stand-in answers common requests, so nothing costs money.
-        </p>
+        <div class="glass env">
+          <h3>Settings: nothing to fill in</h3>
+          <p>
+            The first <code>make dev</code> copies <code>.env.example</code> to <code>.env</code>.
+            It holds local ports, the local database password and values for the stand-in Slack,
+            GitHub and Stripe, all marked dev-only. It also makes a throwaway key for the stand-in
+            GitHub in <code>.dev-secrets/</code>. Both stay on your machine; git ignores them.
+          </p>
+          <ul>
+            <li>
+              <b>Real models:</b> add <code>OPENROUTER_API_KEY=…</code> to <code>.env</code> and run
+              <code>make dev</code> again. Without it, a built-in stand-in answers and nothing costs
+              money.
+            </li>
+            <li>
+              <b>Real Slack, GitHub and Stripe:</b> replace their values in <code>.env</code>; the
+              runbooks in <code>docs/runbooks/</code> say where each comes from.
+            </li>
+            <li>
+              <b>A port is taken:</b> change it in <code>.env</code>, for example
+              <code>WEB_PORT</code>.
+            </li>
+          </ul>
+        </div>
+        <p class="small">Needs Node 22.12 or newer, pnpm, uv, Docker and Make.</p>
         <div class="actions">
           <a class="btn primary" href="{{REPO_URL}}">View on GitHub</a>
           <a class="btn" href="/review">See Review</a>

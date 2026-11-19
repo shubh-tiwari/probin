@@ -21,4 +21,9 @@ export default tseslint.config(
     languageOptions: { sourceType: 'commonjs' },
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
+  {
+    // The product site's scripts run in the browser.
+    files: ['site/src/**/*.js'],
+    languageOptions: { sourceType: 'script', globals: globals.browser },
+  },
 );

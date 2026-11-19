@@ -131,9 +131,9 @@ function ServiceMap(props: {
   const x = (s: string) => 20 + order.indexOf(s) * (width + gap);
   const svgWidth = 40 + order.length * width + (order.length - 1) * gap;
   const svg = `<svg viewBox="0 0 ${svgWidth} 120" width="100%" style="max-width:${svgWidth}px" aria-hidden="true" font-family="Inter, system-ui, sans-serif">
-    <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#3B4252"/></marker></defs>
-    ${order.map((s) => `<rect x="${x(s)}" y="40" width="${width}" height="44" rx="8" fill="#FFFFFF" stroke="#1F5FD0" stroke-width="1.5"/><text x="${x(s) + width / 2}" y="67" text-anchor="middle" font-size="14" fill="#1B1F27">${s}</text>`).join('')}
-    ${edges.map((e) => `<line x1="${x(e.from) + width}" y1="62" x2="${x(e.to) - 4}" y2="62" stroke="#3B4252" stroke-width="1.5" marker-end="url(#arrow)"/><text x="${(x(e.from) + width + x(e.to)) / 2}" y="54" text-anchor="middle" font-size="12" fill="#3B4252">${e.rate.toFixed(2)}/s</text>`).join('')}
+    <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--secondary)"/></marker></defs>
+    ${order.map((s) => `<rect x="${x(s)}" y="40" width="${width}" height="44" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="${x(s) + width / 2}" y="67" text-anchor="middle" font-size="14" style="fill:var(--text)">${s}</text>`).join('')}
+    ${edges.map((e) => `<line x1="${x(e.from) + width}" y1="62" x2="${x(e.to) - 4}" y2="62" style="stroke:var(--secondary)" stroke-width="1.5" marker-end="url(#arrow)"/><text x="${(x(e.from) + width + x(e.to)) / 2}" y="54" text-anchor="middle" font-size="12" style="fill:var(--secondary)">${e.rate.toFixed(2)}/s</text>`).join('')}
   </svg>`;
   return (
     <figure style="margin:0;display:flex;flex-direction:column;gap:8px">

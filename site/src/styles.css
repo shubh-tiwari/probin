@@ -543,7 +543,7 @@ h3 {
   box-shadow:
     var(--shadow),
     0 0 60px -20px rgba(124, 107, 255, 0.5);
-  background: #fff;
+  background: var(--night-2);
 }
 
 .promise-grid {
@@ -575,6 +575,31 @@ h3 {
 .terminal .p {
   color: var(--lilac);
   user-select: none;
+}
+.env {
+  margin-top: 20px;
+  padding: 22px 26px;
+  max-width: 780px;
+}
+.env p,
+.env li {
+  color: var(--muted);
+}
+.env p {
+  margin: 0 0 12px;
+}
+.env ul {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 6px;
+}
+.env b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.env code {
+  color: #d8d2ff;
 }
 .small {
   color: var(--faint);

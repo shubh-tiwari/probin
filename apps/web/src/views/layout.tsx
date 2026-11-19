@@ -2,10 +2,16 @@
 import { PRODUCT_NAME } from '@app/config';
 import type { Child } from 'hono/jsx';
 import { raw } from 'hono/html';
-import { COLORS } from '../theme.js';
+import { COLORS, DARK_COLORS } from '../theme.js';
+
+/** CSS custom properties for one palette. */
+const vars = (selector: string, c: typeof COLORS) =>
+  `${selector}{color-scheme:${c === COLORS ? 'light' : 'dark'};--page:${c.page};--surface:${c.surface};--text:${c.text};--secondary:${c.secondary};--muted:${c.muted};--border:${c.border};--control:${c.control};--divider:${c.divider};--accent:${c.accent};--accent-hover:${c.accentHover};--accent-button:${c.accentButton};--on-accent:${c.onAccent};--accent-soft:${c.accentSoft};--accent-soft-text:${c.accentSoftText};--warning:${c.warning};--on-warning:${c.onWarning};--pending-bg:${c.pendingBg};--pending-text:${c.pendingText};--danger:${c.danger}}`;
 
 const CSS = `
-:root{--page:${COLORS.page};--surface:${COLORS.surface};--text:${COLORS.text};--secondary:${COLORS.secondary};--muted:${COLORS.muted};--border:${COLORS.border};--control:${COLORS.control};--divider:${COLORS.divider};--accent:${COLORS.accent};--accent-hover:${COLORS.accentHover};--accent-soft:${COLORS.accentSoft};--accent-soft-text:${COLORS.accentSoftText};--warning:${COLORS.warning};--pending-bg:${COLORS.pendingBg};--pending-text:${COLORS.pendingText};--danger:${COLORS.danger}}
+${vars(':root', COLORS)}
+.chart-dark{display:none}
+@media (prefers-color-scheme: dark){${vars(':root', DARK_COLORS)} .chart-light{display:none} .chart-dark{display:block}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
 a{color:var(--accent)}a:hover{color:var(--accent-hover)}
@@ -21,8 +27,8 @@ code,pre{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px}
 .status{font-size:12px;color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border-radius:8px;border:1px solid var(--control);background:var(--surface);color:var(--text);font:inherit;font-weight:500;cursor:pointer;text-decoration:none}
 .btn:hover{border-color:var(--muted)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn.primary:hover{background:var(--accent-hover)}
+.btn.primary{background:var(--accent-button);border-color:var(--accent-button);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.1)}
 .btn.chip{border-radius:999px;font-size:13px;color:var(--secondary)}
 .btn.icon{width:44px;padding:0}
 .btn[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-soft-text)}
@@ -48,7 +54,7 @@ textarea{padding:10px 12px;min-height:88px;font-family:'JetBrains Mono',ui-monos
 .tag{font-size:12px;color:var(--secondary);background:var(--divider);border-radius:999px;padding:2px 10px;white-space:nowrap}
 .badge{font-size:12px;font-weight:500;border-radius:999px;padding:2px 10px;background:var(--accent-soft);color:var(--accent-soft-text);white-space:nowrap}
 .badge.pending{background:var(--pending-bg);color:var(--pending-text)}
-.badge.firing{background:var(--warning);color:#fff;font-weight:600}
+.badge.firing{background:var(--warning);color:var(--on-warning);font-weight:600}
 .badge.ok{background:var(--divider);color:var(--secondary)}
 .main{flex:999 1 560px;min-width:0;padding:20px;display:flex;flex-direction:column;gap:16px}
 .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
@@ -82,6 +88,7 @@ export function Layout(props: { title: string; children: Child; scripts?: boolea
         <head>
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="color-scheme" content="light dark" />
           <title>{`${props.title} · ${PRODUCT_NAME}`}</title>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link

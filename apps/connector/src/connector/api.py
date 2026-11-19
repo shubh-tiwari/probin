@@ -35,3 +35,8 @@ class ReadApi:
 
     async def query(self, query: str, range_: str) -> Any:
         return await self._call('POST', '/v1/query', json={'query': query, 'range': range_})
+
+    async def context(self, files: list[dict[str, str]], manifests: list[dict[str, str]]) -> Any:
+        return await self._call(
+            'POST', '/v1/context', json={'files': files, 'manifests': manifests}
+        )

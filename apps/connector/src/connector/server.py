@@ -6,6 +6,7 @@ request rate and p95, and run queries. It cannot change anything.
 """
 
 import json
+from pathlib import Path
 from typing import Annotated, Any, Protocol
 
 from mcp.server.mcpserver import MCPServer
@@ -13,6 +14,7 @@ from mcp.types import CallToolResult, TextContent, ToolAnnotations
 from pydantic import Field
 
 from appcommon.product import product_name, product_slug
+from connector.workspace_files import gather
 
 READ_ONLY = ToolAnnotations(read_only_hint=True, open_world_hint=False)
 
@@ -22,6 +24,9 @@ class Api(Protocol):
     async def search(self, text: str, service: str | None = None) -> Any: ...
     async def endpoints(self, service: str) -> Any: ...
     async def query(self, query: str, range_: str) -> Any: ...
+    async def context(
+        self, files: list[dict[str, str]], manifests: list[dict[str, str]]
+    ) -> Any: ...
 
 
 def _text(value: Any) -> str:
@@ -47,7 +52,7 @@ def summarise(result: dict[str, Any]) -> dict[str, Any]:
     return {'lines': result['lineCount'], 'step_seconds': result['step'], 'series': series}
 
 
-def create_connector(api: Api) -> MCPServer:
+def create_connector(api: Api, cwd: Path | None = None) -> MCPServer:
     server = MCPServer(name=f'{product_slug()}-metrics', version='1.0.0')
 
     @server.tool(
@@ -108,5 +113,46 @@ def create_connector(api: Api) -> MCPServer:
             return CallToolResult(
                 content=[TextContent(type='text', text=f'The query failed: {error}')], is_error=True
             )
+
+    @server.tool(
+        name='production_context',
+        title='Production context',
+        description=(
+            'Call this before you change code that handles requests. Pass the files you are '
+            'about to edit (paths relative to the current directory). It says which endpoints '
+            'those files serve and how each behaves in production over the last hour: p95 '
+            'latency, traffic, failure rate, how it ranks in its service, the alert rules '
+            'watching it, and the services it calls. Keep slow and busy paths fast; do not add '
+            'work to them without need. The files are read, never stored.'
+        ),
+        annotations=READ_ONLY,
+        structured_output=False,
+    )
+    async def production_context(
+        paths: Annotated[list[str], Field(min_length=1, max_length=20)],
+    ) -> str | CallToolResult:
+        found = gather(paths, cwd or Path.cwd())
+        if not found.files:
+            return CallToolResult(
+                content=[
+                    TextContent(
+                        type='text', text='No file could be read: ' + '; '.join(found.skipped)
+                    )
+                ],
+                is_error=True,
+            )
+        try:
+            result = await api.context(found.files, found.manifests)
+        except Exception as error:
+            return CallToolResult(
+                content=[
+                    TextContent(type='text', text=f'Production context is unavailable: {error}')
+                ],
+                is_error=True,
+            )
+        summary = str(result.get('summary', ''))
+        if found.skipped:
+            summary += '\n\nNot read: ' + '; '.join(found.skipped)
+        return summary
 
     return server

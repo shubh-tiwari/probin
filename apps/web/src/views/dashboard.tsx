@@ -8,6 +8,8 @@ import { Layout, TopBar } from './layout.js';
 export interface ChartView {
   /** The chart as SVG, or why there is none. */
   svg?: string;
+  /** The same chart for the dark theme. */
+  svgDark?: string;
   reading: string;
   error?: string;
 }
@@ -45,7 +47,14 @@ export function Chart(props: { chart: ChartView }) {
   return (
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
       <div class="chart" role="img" aria-label={props.chart.reading}>
-        {raw(props.chart.svg)}
+        {props.chart.svgDark ? (
+          <>
+            <div class="chart-light">{raw(props.chart.svg)}</div>
+            <div class="chart-dark">{raw(props.chart.svgDark)}</div>
+          </>
+        ) : (
+          raw(props.chart.svg)
+        )}
       </div>
       <figcaption class="reading">{props.chart.reading}</figcaption>
     </figure>

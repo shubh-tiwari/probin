@@ -451,8 +451,21 @@ try {
       },
     });
     assert(!result.isError, 'the query failed');
+    // Production context for a file a coding agent is about to change.
+    const context = (
+      (
+        await client.callTool({
+          name: 'production_context',
+          arguments: { paths: ['infra/demo/checkout-node/server.cjs'] },
+        })
+      ).content as { text: string }[]
+    )[0]!.text;
+    assert(
+      /POST \/checkout\/pay \(line \d+\): p95 [0-9.]+ m?s/.test(context),
+      `no production context for the payment handler: ${context.slice(0, 300)}`,
+    );
     await client.close();
-    return `services: ${services.services.join(', ')} (from the stdio connector)`;
+    return `services: ${services.services.join(', ')}; production context for checkout/server.cjs (from the stdio connector)`;
   });
 
   // ---------------------------------------------------------------- billing, deletion, own store

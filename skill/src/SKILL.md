@@ -18,6 +18,8 @@ Then **check your work** (last section). Do not skip it: a wrong metric name is 
 
 If a {{PRODUCT_NAME}} connector is available to you as a tool, use it to look at the service's live metrics while you work.
 
+**Before you change code that handles requests**, call its `production_context` tool with the files you are about to edit. It tells you which endpoints those files serve and how they behave in production: p95 latency, traffic, failure rate, whether the endpoint is the slowest or busiest of its service, the alert rules watching it, and the services it calls. Keep that in mind while you write: do not add work to a slow or busy path without need, and do not push an endpoint toward a threshold an alert rule watches.
+
 ## The convention
 
 Names follow the OpenTelemetry semantic conventions. Do not invent names for things the conventions already cover.

@@ -17,3 +17,13 @@ export {
   workspaceForInstallation,
   type ReviewService,
 } from './service.js';
+export {
+  CONTEXT_LIMITS,
+  CONTEXT_WINDOW,
+  productionContext,
+  summarise,
+  type EndpointContext,
+  type FileContext,
+  type ProductionContext,
+  type SourceFile,
+} from './context.js';
